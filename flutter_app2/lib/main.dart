@@ -31,12 +31,12 @@ class HomeState extends State<Home> {
                     isChecked = newValue;
                     if (isChecked) {
                       Navigator.of(context).push(MaterialPageRoute<Null>(
-                          builder: (BuildContext context1) {
+                          builder: (BuildContext context) {
                         MyStatelessWidget(Text("some text"));
                       }));
                     } else {
                       Navigator.of(context).push(MaterialPageRoute<Null>(
-                          builder: (BuildContext context1) {
+                          builder: (BuildContext context) {
                         MyStatefulWidget();
                       }));
                     }

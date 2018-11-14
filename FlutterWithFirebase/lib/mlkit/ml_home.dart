@@ -39,7 +39,7 @@ class _MLHomeState extends State<MLHome> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('MLKit Demo'),
+          title: Text('HelloMLFire'),
         ),
         body: SingleChildScrollView(
           child: Column(
