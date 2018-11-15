@@ -1,8 +1,8 @@
-cloud_firestore=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\cloud_firestore-0.8.2+3\\
-firebase_admob=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\firebase_admob-0.5.7\\
-firebase_analytics=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\firebase_analytics-1.0.6\\
-firebase_auth=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\firebase_auth-0.6.2+1\\
-firebase_core=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\firebase_core-0.2.5+1\\
-google_sign_in=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\google_sign_in-3.2.4\\
-image_picker=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\image_picker-0.4.10\\
-mlkit=C:\\FlutterSDK\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\mlkit-0.9.0\\
+cloud_firestore=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.8.2+3/
+firebase_admob=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_admob-0.5.7/
+firebase_analytics=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-1.0.6/
+firebase_auth=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.6.2+1/
+firebase_core=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.2.5+1/
+google_sign_in=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-3.2.4/
+image_picker=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.4.10/
+mlkit=/Users/apple/Documents/FlutterSDK/flutter/.pub-cache/hosted/pub.dartlang.org/mlkit-0.9.0/

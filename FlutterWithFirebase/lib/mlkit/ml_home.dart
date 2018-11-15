@@ -66,7 +66,7 @@ class _MLHomeState extends State<MLHome> {
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: RaisedButton(
-              color: Colors.blue,
+              color: Colors.green,
               textColor: Colors.white,
               splashColor: Colors.blueGrey,
               onPressed: () {
@@ -78,7 +78,7 @@ class _MLHomeState extends State<MLHome> {
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: RaisedButton(
-              color: Colors.blue,
+              color: Colors.green,
               textColor: Colors.white,
               splashColor: Colors.blueGrey,
               onPressed: () {

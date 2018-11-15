@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'HelloFireML',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       navigatorObservers: <NavigatorObserver>[observer],
       // home: new WallScreen(analytics: analytics, observer: observer),
