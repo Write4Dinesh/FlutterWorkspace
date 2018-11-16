@@ -16,13 +16,14 @@ class Screen1 extends StatelessWidget {
                           borderRadius:
                               BorderRadius.all(Radius.circular(40.0))),
                       child: Row(
+                        mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           Image.asset('assets/back.png'),
                           Padding(padding: EdgeInsets.only(left: 150.0)),
                           Text(
                             "Settings",
                             textAlign: TextAlign.center,
-                            style: getFontStyleForSettings(),
+                            style: buildTextStyleForTopBar(),
                           )
                         ],
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -30,49 +31,65 @@ class Screen1 extends StatelessWidget {
                       ))),
               Expanded(
                   flex: 7,
-                  child: Column(children: <Widget>[
-                    Text("Middle1"),
-                    Text("Middle2"),
-                    Text("Middle3")
-                  ])),
-              Expanded(
-                  flex: 2,
-                  child: Container(
-                      child: Row(children: <Widget>[
-                      Container(child:Column(
-                          children: <Widget>[
-                            getBottomImage("assets/back.png"),
-                            Text("Home", style: getFontStyleForBottomText())
-                          ],
-
-                        )),
-                        Container(child:Column(
-                          children: <Widget>[
-                            getBottomImage("assets/settings.png"),
-                            Text("Settings", style: getFontStyleForBottomText())
-                          ],
-                        )),
-            Container(child:Column(children: <Widget>[
-                          getBottomImage("assets/share.png"),
-                          Text("Share", style: getFontStyleForBottomText())
-                        ]))
-                      ]),
-                      color: Colors.blue))
+                  child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text("Middle1"),
+                        Text("Middle2"),
+                        Text("Middle3")
+                      ])),
+              Expanded(flex: 2, child: buildBottomBar())
             ])));
   }
 
-  TextStyle getFontStyleForSettings() {
+  Container buildBottomBar() {
+    return Container(
+      color: Colors.blue,
+      child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                getBottomImage("assets/home.png"),
+                Text("Home", style: buildTextStyleForBottomBar())
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                getBottomImage("assets/settings.png"),
+                Text("Settings", style: buildTextStyleForBottomBar())
+              ],
+            ),
+            Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  getBottomImage("assets/share.png"),
+                  Text("Share", style: buildTextStyleForBottomBar())
+                ])
+          ]),
+    );
+  }
+
+  TextStyle buildTextStyleForTopBar() {
     return TextStyle(
         fontStyle: FontStyle.normal,
-        fontSize: 30,
+        fontSize: 30.0,
         color: Colors.white,
         fontWeight: FontWeight.bold);
   }
 
-  TextStyle getFontStyleForBottomText() {
+  TextStyle buildTextStyleForBottomBar() {
     return TextStyle(
         fontStyle: FontStyle.normal,
-        fontSize: 10,
+        fontSize: 10.0,
         color: Colors.grey,
         fontWeight: FontWeight.bold);
   }
@@ -81,6 +98,8 @@ class Screen1 extends StatelessWidget {
     return Image.asset(
       path,
       fit: BoxFit.fill,
+      height: 50.0,
+      width: 50.0,
     );
   }
 }
