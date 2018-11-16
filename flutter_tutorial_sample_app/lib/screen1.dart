@@ -38,7 +38,12 @@ class Screen1 extends StatelessWidget {
     const listSize = 100;
     var widgetArray = <Widget>[];
     for (int i = 0; i < listSize; i++) {
-      widgetArray.add(new Text("ListItem_$i"));
+      widgetArray.add(Container(
+          decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          padding: EdgeInsets.all(10.0),
+          child: Text("ListItem_$i")));
     }
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) => widgetArray[index],
