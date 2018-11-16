@@ -29,18 +29,22 @@ class Screen1 extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                       ))),
-              Expanded(
-                  flex: 7,
-                  child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text("Middle1"),
-                        Text("Middle2"),
-                        Text("Middle3")
-                      ])),
-              Expanded(flex: 2, child: buildBottomBar())
+              Expanded(flex: 7, child: buildListView()),
+              Expanded(flex: 1, child: buildBottomBar())
             ])));
+  }
+
+  ListView buildListView() {
+    const listSize = 100;
+    var widgetArray = <Widget>[];
+    for (int i = 0; i < listSize; i++) {
+      widgetArray.add(new Text("ListItem_$i"));
+    }
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) => widgetArray[index],
+      itemCount: widgetArray.length,
+      padding: EdgeInsets.only(left: 50.0, right: 50.0),
+    );
   }
 
   Container buildBottomBar() {
@@ -52,7 +56,7 @@ class Screen1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Column(
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 getBottomImage("assets/home.png"),
@@ -60,7 +64,7 @@ class Screen1 extends StatelessWidget {
               ],
             ),
             Column(
-              mainAxisSize: MainAxisSize.max,
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 getBottomImage("assets/settings.png"),
@@ -68,7 +72,7 @@ class Screen1 extends StatelessWidget {
               ],
             ),
             Column(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   getBottomImage("assets/share.png"),
