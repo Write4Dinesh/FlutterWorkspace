@@ -1,4 +1,4 @@
-import 'package:flutfire/mlkit/ml_home.dart';
+import 'package:flutfire/mlkit/ml_businesscard_scan.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';

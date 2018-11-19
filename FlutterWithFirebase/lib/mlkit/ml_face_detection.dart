@@ -2,28 +2,31 @@ import 'package:flutfire/mlkit/ml_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'ml_businesscard_scan.dart';
-import 'ml_barcode_scan.dart';
-import 'ml_face_detection.dart';
-import 'ml_lable_scan.dart';
 
 const String TEXT_SCANNER = 'TEXT_SCANNER';
 const String BARCODE_SCANNER = 'BARCODE_SCANNER';
 const String LABEL_SCANNER = 'LABEL_SCANNER';
 const String FACE_SCANNER = 'FACE_SCANNER';
 
-class MLHome extends StatefulWidget {
-  MLHome({Key key}) : super(key: key);
+class MLFaceDetection extends StatefulWidget {
+  String title;
+
+  MLFaceDetection({Key key, this.title: 'Face Detection'}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MLHomeState();
+  State<StatefulWidget> createState() => _MLFaceDetectionState(title);
 }
 
-class _MLHomeState extends State<MLHome> {
+class _MLFaceDetectionState extends State<MLFaceDetection> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String title;
+
+  _MLFaceDetectionState(String title) {
+    this.title = title;
+  }
 
   File _file;
   String _selectedScanner = TEXT_SCANNER;
@@ -33,7 +36,7 @@ class _MLHomeState extends State<MLHome> {
     final columns = List<Widget>();
 
     //choose the ML feature
-    columns.add(buildRowTitle(context, 'Select Scanner Type'));
+    columns.add(buildRowTitle(context, title));
     columns.add(buildSelectScannerRowWidget(context));
 
     columns.add(buildRowTitle(context, 'Pick Image'));
@@ -47,9 +50,6 @@ class _MLHomeState extends State<MLHome> {
         ),
         body: SingleChildScrollView(
           child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: columns,
           ),
         ));
@@ -72,8 +72,14 @@ class _MLHomeState extends State<MLHome> {
         Expanded(
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: getRaisedButton(context, "Scan Business Card",
-              MaterialPageRoute(builder: (context) => MLScanBusinessCard())),
+          child: RaisedButton(
+              color: Colors.green,
+              textColor: Colors.white,
+              splashColor: Colors.blueGrey,
+              onPressed: () {
+                onPickImageSelected(CAMERA_SOURCE);
+              },
+              child: const Text('Camera')),
         )),
         Expanded(
             child: Padding(
@@ -91,43 +97,33 @@ class _MLHomeState extends State<MLHome> {
     );
   }
 
-  RaisedButton getRaisedButton(
-      BuildContext context, String label, MaterialPageRoute goToPage) {
-    return RaisedButton(
-        color: Colors.green,
-        textColor: Colors.white,
-        splashColor: Colors.blueGrey,
-        onPressed: () {
-          Navigator.of(context).push(goToPage);
-          //onPickImageSelected(CAMERA_SOURCE);
-        },
-        child: Text(label));
-  }
-
   Widget buildSelectScannerRowWidget(BuildContext context) {
-    final MaterialPageRoute businessCarePage =
-        MaterialPageRoute(builder: (context) => MLScanBusinessCard(title:'Scan Business Card'));
-    final MaterialPageRoute faceScannerPage =
-        MaterialPageRoute(builder: (context) => MLFaceDetection());
-    final MaterialPageRoute labelScannerPage =
-        MaterialPageRoute(builder: (context) => MLLableScan());
-    final MaterialPageRoute barcodeScannerPage =
-        MaterialPageRoute(builder: (context) => MLBarcodeScan());
-    List labels = <String>[
-      "Scan Business Card",
-      "Face Scanner",
-      "Label Scanner",
-      "Barcode Scanner"
-    ];
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Wrap(
       children: <Widget>[
-        getRaisedButton(context, labels[0], businessCarePage),
-        getRaisedButton(context, labels[1], faceScannerPage),
-        getRaisedButton(context, labels[2], labelScannerPage),
-        getRaisedButton(context, labels[3], barcodeScannerPage),
+        RadioListTile<String>(
+          title: Text('Text Recognition'),
+          groupValue: _selectedScanner,
+          value: TEXT_SCANNER,
+          onChanged: onScannerSelected,
+        ),
+        RadioListTile<String>(
+          title: Text('Barcode Scanner'),
+          groupValue: _selectedScanner,
+          value: BARCODE_SCANNER,
+          onChanged: onScannerSelected,
+        ),
+        RadioListTile<String>(
+          title: Text('Label Scanner'),
+          groupValue: _selectedScanner,
+          value: LABEL_SCANNER,
+          onChanged: onScannerSelected,
+        ),
+        RadioListTile<String>(
+          title: Text('Face Scanner'),
+          groupValue: _selectedScanner,
+          value: FACE_SCANNER,
+          onChanged: onScannerSelected,
+        )
       ],
     );
   }
