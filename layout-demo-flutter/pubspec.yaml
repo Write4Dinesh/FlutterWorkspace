@@ -1,16 +1,5 @@
-name: flutter_tutorial_sample_app
-description: Sample flutter app to learn coding in flutter
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# Read more about versioning at semver.org.
-version: 1.0.0+1
-
-environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+name: layout_demo_flutter
+description: A new Flutter project.
 
 dependencies:
   flutter:
@@ -18,7 +7,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^0.1.0
 
 dev_dependencies:
   flutter_test:
@@ -30,6 +19,26 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+  # https://unsplash.com/photos/EN2PucB2yhA
+  - assets/ronnie-mayo-361348-unsplash.jpg
+  # https://unsplash.com/photos/pmH_Y4Qetrk
+  - assets/stefan-stefancik-105587-unsplash.jpg
+  # https://unsplash.com/photos/5ditmO9_ae0
+  - assets/simon-fitall-530083-unsplash.jpg
+  # https://unsplash.com/photos/3MNzGlQM7qs
+  - assets/anton-repponen-99530-unsplash.jpg
+  # https://unsplash.com/photos/CPjkWSD0RM0
+  - assets/kevin-cochran-524957-unsplash.jpg
+  # https://unsplash.com/photos/T0XLKgpyT_c
+  - assets/samsommer-72299-unsplash.jpg
+  # https://unsplash.com/photos/twukN12EN7c
+  - assets/simon-matzinger-320332-unsplash.jpg
+  # https://unsplash.com/photos/8BH_M-53CyA
+  - assets/meng-ji-102492-unsplash.jpg
+  # https://unsplash.com/photos/tvOvBq90bM0
+  - assets/brady-bellini-212790-unsplash.jpg
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -37,11 +46,9 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-  - assets/share.png
-  - assets/settings.png
-  - assets/back.png
-  - assets/home.png
+  # assets:
+  #  - images/a_dot_burr.jpeg
+  #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
@@ -66,5 +73,5 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  # For details regarding fonts from package dependencies,
+  # For details regarding fonts from package dependencies, 
   # see https://flutter.io/custom-fonts/#from-packages
