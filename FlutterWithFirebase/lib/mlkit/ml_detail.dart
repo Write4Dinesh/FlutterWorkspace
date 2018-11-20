@@ -4,25 +4,26 @@ import 'dart:io';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 
-class MLDetail extends StatefulWidget {
+class AccScanDetail extends StatefulWidget {
   final File _file;
   final String _scannerType;
 
-  MLDetail(this._file, this._scannerType);
+  AccScanDetail(this._file, this._scannerType);
 
   @override
   State<StatefulWidget> createState() {
-    return _MLDetailState();
+    return _AccScanDetailState();
   }
 }
 
-class _MLDetailState extends State<MLDetail> {
+class _AccScanDetailState extends State<AccScanDetail> {
   FirebaseVisionTextDetector textDetector = FirebaseVisionTextDetector.instance;
   FirebaseVisionBarcodeDetector barcodeDetector =
       FirebaseVisionBarcodeDetector.instance;
   FirebaseVisionLabelDetector labelDetector =
       FirebaseVisionLabelDetector.instance;
   FirebaseVisionFaceDetector faceDetector = FirebaseVisionFaceDetector.instance;
+
   List<VisionText> _currentTextLabels = <VisionText>[];
   List<VisionBarcode> _currentBarcodeLabels = <VisionBarcode>[];
   List<VisionLabel> _currentLabelLabels = <VisionLabel>[];

@@ -2,27 +2,29 @@ import 'package:flutfire/mlkit/ml_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutfire/app_constants.dart' as AppConstants;
 
 const String TEXT_SCANNER = 'TEXT_SCANNER';
 const String BARCODE_SCANNER = 'BARCODE_SCANNER';
 const String LABEL_SCANNER = 'LABEL_SCANNER';
 const String FACE_SCANNER = 'FACE_SCANNER';
 
-class MLScanBusinessCard extends StatefulWidget {
-  String title;
+class ACCBusinessCardScanner extends StatefulWidget {
+  final String title;
 
-  MLScanBusinessCard({Key key, this.title: 'BusinessCard Scan'}) : super(key: key);
+  ACCBusinessCardScanner({Key key, this.title: 'BusinessCard Scanner'})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MLScanBusinessCardState(title);
+  State<StatefulWidget> createState() => _ACCBusinessCardScannerState(title);
 }
 
-class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
+class _ACCBusinessCardScannerState extends State<ACCBusinessCardScanner> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
   String title;
 
-  _MLScanBusinessCardState(String title) {
+  _ACCBusinessCardScannerState(String title) {
     this.title = title;
   }
 
@@ -33,11 +35,12 @@ class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
 
   @override
   Widget build(BuildContext context) {
+    _selectedScanner = TEXT_SCANNER;
     final columns = List<Widget>();
 
     //choose the ML feature
     columns.add(buildRowTitle(context, this.title));
-    columns.add(buildSelectScannerRowWidget(context));
+    //columns.add(buildSelectScannerRowWidget(context));
 
     columns.add(buildRowTitle(context, 'Pick Image'));
     columns.add(buildSelectImageRowWidget(context));
@@ -46,7 +49,7 @@ class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('HelloMLFire'),
+          title: Text(AppConstants.BUSINESS_CARD_SCAN_TITLE),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -70,6 +73,7 @@ class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
     return Row(
       children: <Widget>[
         Expanded(
+          flex: 5,
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: RaisedButton(
@@ -82,6 +86,7 @@ class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
               child: const Text('Camera')),
         )),
         Expanded(
+          flex: 5,
             child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: RaisedButton(
@@ -93,37 +98,6 @@ class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
               },
               child: const Text('Gallery')),
         ))
-      ],
-    );
-  }
-
-  Widget buildSelectScannerRowWidget(BuildContext context) {
-    return Wrap(
-      children: <Widget>[
-        RadioListTile<String>(
-          title: Text('Text Recognition'),
-          groupValue: _selectedScanner,
-          value: TEXT_SCANNER,
-          onChanged: onScannerSelected,
-        ),
-        RadioListTile<String>(
-          title: Text('Barcode Scanner'),
-          groupValue: _selectedScanner,
-          value: BARCODE_SCANNER,
-          onChanged: onScannerSelected,
-        ),
-        RadioListTile<String>(
-          title: Text('Label Scanner'),
-          groupValue: _selectedScanner,
-          value: LABEL_SCANNER,
-          onChanged: onScannerSelected,
-        ),
-        RadioListTile<String>(
-          title: Text('Face Scanner'),
-          groupValue: _selectedScanner,
-          value: FACE_SCANNER,
-          onChanged: onScannerSelected,
-        )
       ],
     );
   }
@@ -181,7 +155,7 @@ class _MLScanBusinessCardState extends State<MLScanBusinessCard> {
       Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => MLDetail(file, _selectedScanner)),
+            builder: (context) => AccScanDetail(file, _selectedScanner)),
       );
     } catch (e) {
       scaffold.showSnackBar(SnackBar(

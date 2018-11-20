@@ -6,20 +6,21 @@ import 'ml_businesscard_scan.dart';
 import 'ml_barcode_scan.dart';
 import 'ml_face_detection.dart';
 import 'ml_lable_scan.dart';
+import 'package:flutfire/app_constants.dart' as AppContstants;
 
 const String TEXT_SCANNER = 'TEXT_SCANNER';
 const String BARCODE_SCANNER = 'BARCODE_SCANNER';
 const String LABEL_SCANNER = 'LABEL_SCANNER';
 const String FACE_SCANNER = 'FACE_SCANNER';
 
-class MLHome extends StatefulWidget {
-  MLHome({Key key}) : super(key: key);
+class AccHome extends StatefulWidget {
+  AccHome({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MLHomeState();
+  State<StatefulWidget> createState() => _AccHomeState();
 }
 
-class _MLHomeState extends State<MLHome> {
+class _AccHomeState extends State<AccHome> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
 
@@ -36,14 +37,11 @@ class _MLHomeState extends State<MLHome> {
     columns.add(buildRowTitle(context, 'Select Scanner Type'));
     columns.add(buildSelectScannerRowWidget(context));
 
-    columns.add(buildRowTitle(context, 'Pick Image'));
-    columns.add(buildSelectImageRowWidget(context));
-
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('HelloMLFire'),
+          title: Text(AppContstants.HOME_PAGE_TITLE),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -66,61 +64,38 @@ class _MLHomeState extends State<MLHome> {
     ));
   }
 
-  Widget buildSelectImageRowWidget(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: getRaisedButton(context, "Scan Business Card",
-              MaterialPageRoute(builder: (context) => MLScanBusinessCard())),
-        )),
-        Expanded(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: RaisedButton(
-              color: Colors.green,
-              textColor: Colors.white,
-              splashColor: Colors.blueGrey,
-              onPressed: () {
-                onPickImageSelected(GALLERY_SOURCE);
-              },
-              child: const Text('Gallery')),
-        ))
-      ],
-    );
-  }
-
-  RaisedButton getRaisedButton(
+  Widget getRaisedButton(
       BuildContext context, String label, MaterialPageRoute goToPage) {
-    return RaisedButton(
-        color: Colors.green,
-        textColor: Colors.white,
-        splashColor: Colors.blueGrey,
-        onPressed: () {
-          Navigator.of(context).push(goToPage);
-          //onPickImageSelected(CAMERA_SOURCE);
-        },
-        child: Text(label));
+    return SizedBox(
+        width: 200.0,
+        child: RaisedButton(
+            color: Colors.green,
+            textColor: Colors.white,
+            splashColor: Colors.blueGrey,
+            onPressed: () {
+              Navigator.of(context).push(goToPage);
+              //onPickImageSelected(CAMERA_SOURCE);
+            },
+            child: Text(label)));
   }
 
   Widget buildSelectScannerRowWidget(BuildContext context) {
     final MaterialPageRoute businessCarePage =
-        MaterialPageRoute(builder: (context) => MLScanBusinessCard(title:'Scan Business Card'));
+        MaterialPageRoute(builder: (context) => ACCBusinessCardScanner());
     final MaterialPageRoute faceScannerPage =
-        MaterialPageRoute(builder: (context) => MLFaceDetection());
+        MaterialPageRoute(builder: (context) => AccFaceScanner());
     final MaterialPageRoute labelScannerPage =
-        MaterialPageRoute(builder: (context) => MLLableScan());
+        MaterialPageRoute(builder: (context) => AccLableScanner());
     final MaterialPageRoute barcodeScannerPage =
-        MaterialPageRoute(builder: (context) => MLBarcodeScan());
+        MaterialPageRoute(builder: (context) => AccBarcodeScanner());
     List labels = <String>[
-      "Scan Business Card",
+      "BusinessCard Scanner",
       "Face Scanner",
       "Label Scanner",
       "Barcode Scanner"
     ];
     return Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -185,7 +160,7 @@ class _MLHomeState extends State<MLHome> {
       Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => MLDetail(file, _selectedScanner)),
+            builder: (context) => AccScanDetail(file, _selectedScanner)),
       );
     } catch (e) {
       scaffold.showSnackBar(SnackBar(

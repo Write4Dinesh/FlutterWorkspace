@@ -8,21 +8,21 @@ const String BARCODE_SCANNER = 'BARCODE_SCANNER';
 const String LABEL_SCANNER = 'LABEL_SCANNER';
 const String FACE_SCANNER = 'FACE_SCANNER';
 
-class MLLableScan extends StatefulWidget {
+class AccLableScanner extends StatefulWidget {
   String title;
 
-  MLLableScan({Key key, this.title: 'Label Scan'}) : super(key: key);
+  AccLableScanner({Key key, this.title: 'Label Scan'}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MLLableScanState(title);
+  State<StatefulWidget> createState() => _AccLableScannerState(title);
 }
 
-class _MLLableScanState extends State<MLLableScan> {
+class _AccLableScannerState extends State<AccLableScanner> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
   String title;
 
-  _MLLableScanState(String title) {
+  _AccLableScannerState(String title) {
     this.title = title;
   }
 
@@ -181,7 +181,7 @@ class _MLLableScanState extends State<MLLableScan> {
       Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => MLDetail(file, _selectedScanner)),
+            builder: (context) => AccScanDetail(file, _selectedScanner)),
       );
     } catch (e) {
       scaffold.showSnackBar(SnackBar(

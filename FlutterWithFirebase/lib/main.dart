@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
       ),
       navigatorObservers: <NavigatorObserver>[observer],
       // home: new WallScreen(analytics: analytics, observer: observer),
-      home: new MLHome(),
+      home: new AccHome(),
+
     );
   }
 }
