@@ -89,9 +89,59 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.LABEL_SCANNER_SCREEN_TITLE),
+          title: Text(widget._scannerType),
         ),
-        body: buildTextList(_currentTextLabels));
+        body: Column(
+          children: <Widget>[
+            buildImage(context),
+            widget._scannerType == AppConstants.TEXT_SCANNER
+                ? buildTextList(_currentTextLabels)
+                : widget._scannerType == AppConstants.BARCODE_SCANNER
+                ? buildBarcodeList<VisionBarcode>(_currentBarcodeLabels)
+                : widget._scannerType == AppConstants.FACE_SCANNER
+                ? buildBarcodeList<VisionFace>(_currentFaceLabels)
+                : buildBarcodeList<VisionLabel>(_currentLabelLabels)
+          ],
+        ));
+  }
+
+  Widget buildImage(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Container(
+          decoration: BoxDecoration(color: Colors.black),
+          child: Center(
+            child: widget._file == null
+                ? Text('No Image')
+                : FutureBuilder<Size>(
+              future: _getImageSize(
+                  Image.file(widget._file, fit: BoxFit.fitWidth)),
+              builder:
+                  (BuildContext context, AsyncSnapshot<Size> snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                      foregroundDecoration: (widget._scannerType ==
+                          AppConstants.TEXT_SCANNER)
+                          ? TextDetectDecoration(
+                          _currentTextLabels, snapshot.data)
+                          : (widget._scannerType == AppConstants.FACE_SCANNER)
+                          ? FaceDetectDecoration(
+                          _currentFaceLabels, snapshot.data)
+                          : (widget._scannerType == AppConstants.BARCODE_SCANNER)
+                          ? BarcodeDetectDecoration(
+                          _currentBarcodeLabels,
+                          snapshot.data)
+                          : LabelDetectDecoration(
+                          _currentLabelLabels, snapshot.data),
+                      child:
+                      Image.file(widget._file, fit: BoxFit.fitWidth));
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          )),
+    );
   }
 
   Widget buildBarcodeList<T>(List<T> barcodes) {
@@ -122,7 +172,7 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
                 case AppConstants.FACE_SCANNER:
                   VisionFace res = barcode as VisionFace;
                   text =
-                      "Raw Value: ${res.smilingProbability},${res.trackingID}";
+                  "Raw Value: ${res.smilingProbability},${res.trackingID}";
                   break;
                 case AppConstants.LABEL_SCANNER:
                   VisionLabel res = barcode as VisionLabel;
@@ -131,6 +181,28 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
               }
 
               return _buildTextRow(text);
+            }),
+      ),
+    );
+  }
+
+  Widget buildTextList(List<VisionText> texts) {
+    if (texts.length == 0) {
+      return Expanded(
+          flex: 1,
+          child: Center(
+            child: Text('No text detected',
+                style: Theme.of(context).textTheme.subhead),
+          ));
+    }
+    return Expanded(
+      flex: 1,
+      child: Container(
+        child: ListView.builder(
+            padding: const EdgeInsets.all(1.0),
+            itemCount: texts.length,
+            itemBuilder: (context, i) {
+              return _buildTextRow(texts[i].text);
             }),
       ),
     );
@@ -145,29 +217,10 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
     );
   }
 
-  Widget buildTextList(List<VisionText> texts) {
-    if (texts.length == 0) {
-      return Expanded(
-          flex: 1,
-          child: Center(
-            child: Text('No text detected',
-                style: Theme.of(context).textTheme.subhead),
-          ));
-    }
-    return Container(
-      child: ListView.builder(
-          padding: const EdgeInsets.all(1.0),
-          itemCount: texts.length,
-          itemBuilder: (context, i) {
-            return _buildTextRow(texts[i].text);
-          }),
-    );
-  }
-
   Future<Size> _getImageSize(Image image) {
     Completer<Size> completer = Completer<Size>();
     image.image.resolve(ImageConfiguration()).addListener(
-        (ImageInfo info, bool _) => completer.complete(
+            (ImageInfo info, bool _) => completer.complete(
             Size(info.image.width.toDouble(), info.image.height.toDouble())));
     return completer.future;
   }
@@ -195,7 +248,6 @@ class BarcodeDetectDecoration extends Decoration {
 class _BarcodeDetectPainter extends BoxPainter {
   final List<VisionBarcode> _barcodes;
   final Size _originalImageSize;
-
   _BarcodeDetectPainter(barcodes, originalImageSize)
       : _barcodes = barcodes,
         _originalImageSize = originalImageSize;
@@ -224,7 +276,6 @@ class _BarcodeDetectPainter extends BoxPainter {
 class TextDetectDecoration extends Decoration {
   final Size _originalImageSize;
   final List<VisionText> _texts;
-
   TextDetectDecoration(List<VisionText> texts, Size originalImageSize)
       : _texts = texts,
         _originalImageSize = originalImageSize;
@@ -238,7 +289,6 @@ class TextDetectDecoration extends Decoration {
 class _TextDetectPainter extends BoxPainter {
   final List<VisionText> _texts;
   final Size _originalImageSize;
-
   _TextDetectPainter(texts, originalImageSize)
       : _texts = texts,
         _originalImageSize = originalImageSize;
@@ -267,7 +317,6 @@ class _TextDetectPainter extends BoxPainter {
 class FaceDetectDecoration extends Decoration {
   final Size _originalImageSize;
   final List<VisionFace> _faces;
-
   FaceDetectDecoration(List<VisionFace> faces, Size originalImageSize)
       : _faces = faces,
         _originalImageSize = originalImageSize;
@@ -281,7 +330,6 @@ class FaceDetectDecoration extends Decoration {
 class _FaceDetectPainter extends BoxPainter {
   final List<VisionFace> _faces;
   final Size _originalImageSize;
-
   _FaceDetectPainter(faces, originalImageSize)
       : _faces = faces,
         _originalImageSize = originalImageSize;
@@ -310,7 +358,6 @@ class _FaceDetectPainter extends BoxPainter {
 class LabelDetectDecoration extends Decoration {
   final Size _originalImageSize;
   final List<VisionLabel> _labels;
-
   LabelDetectDecoration(List<VisionLabel> labels, Size originalImageSize)
       : _labels = labels,
         _originalImageSize = originalImageSize;
@@ -324,7 +371,6 @@ class LabelDetectDecoration extends Decoration {
 class _LabelDetectPainter extends BoxPainter {
   final List<VisionLabel> _labels;
   final Size _originalImageSize;
-
   _LabelDetectPainter(labels, originalImageSize)
       : _labels = labels,
         _originalImageSize = originalImageSize;

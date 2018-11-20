@@ -89,11 +89,60 @@ class _AccScanDetailState extends State<AccFaceScanDetail> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.FACE_DETECTION_SCANNER_SCREEN_TITLE),
+          title: Text(widget._scannerType),
         ),
-        body: buildTextList(_currentTextLabels));
+        body: Column(
+          children: <Widget>[
+            buildImage(context),
+            widget._scannerType == AppConstants.TEXT_SCANNER
+                ? buildTextList(_currentTextLabels)
+                : widget._scannerType == AppConstants.BARCODE_SCANNER
+                ? buildBarcodeList<VisionBarcode>(_currentBarcodeLabels)
+                : widget._scannerType == AppConstants.FACE_SCANNER
+                ? buildBarcodeList<VisionFace>(_currentFaceLabels)
+                : buildBarcodeList<VisionLabel>(_currentLabelLabels)
+          ],
+        ));
   }
 
+  Widget buildImage(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Container(
+          decoration: BoxDecoration(color: Colors.black),
+          child: Center(
+            child: widget._file == null
+                ? Text('No Image')
+                : FutureBuilder<Size>(
+              future: _getImageSize(
+                  Image.file(widget._file, fit: BoxFit.fitWidth)),
+              builder:
+                  (BuildContext context, AsyncSnapshot<Size> snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                      foregroundDecoration: (widget._scannerType ==
+                          AppConstants.TEXT_SCANNER)
+                          ? TextDetectDecoration(
+                          _currentTextLabels, snapshot.data)
+                          : (widget._scannerType == AppConstants.FACE_SCANNER)
+                          ? FaceDetectDecoration(
+                          _currentFaceLabels, snapshot.data)
+                          : (widget._scannerType == AppConstants.BARCODE_SCANNER)
+                          ? BarcodeDetectDecoration(
+                          _currentBarcodeLabels,
+                          snapshot.data)
+                          : LabelDetectDecoration(
+                          _currentLabelLabels, snapshot.data),
+                      child:
+                      Image.file(widget._file, fit: BoxFit.fitWidth));
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          )),
+    );
+  }
 
   Widget buildBarcodeList<T>(List<T> barcodes) {
     if (barcodes.length == 0) {
@@ -123,7 +172,7 @@ class _AccScanDetailState extends State<AccFaceScanDetail> {
                 case AppConstants.FACE_SCANNER:
                   VisionFace res = barcode as VisionFace;
                   text =
-                      "Raw Value: ${res.smilingProbability},${res.trackingID}";
+                  "Raw Value: ${res.smilingProbability},${res.trackingID}";
                   break;
                 case AppConstants.LABEL_SCANNER:
                   VisionLabel res = barcode as VisionLabel;
@@ -137,6 +186,27 @@ class _AccScanDetailState extends State<AccFaceScanDetail> {
     );
   }
 
+  Widget buildTextList(List<VisionText> texts) {
+    if (texts.length == 0) {
+      return Expanded(
+          flex: 1,
+          child: Center(
+            child: Text('No text detected',
+                style: Theme.of(context).textTheme.subhead),
+          ));
+    }
+    return Expanded(
+      flex: 1,
+      child: Container(
+        child: ListView.builder(
+            padding: const EdgeInsets.all(1.0),
+            itemCount: texts.length,
+            itemBuilder: (context, i) {
+              return _buildTextRow(texts[i].text);
+            }),
+      ),
+    );
+  }
 
   Widget _buildTextRow(text) {
     return ListTile(
@@ -147,29 +217,10 @@ class _AccScanDetailState extends State<AccFaceScanDetail> {
     );
   }
 
-  Widget buildTextList(List<VisionText> texts) {
-    if (texts.length == 0) {
-      return Expanded(
-          flex: 1,
-          child: Center(
-            child: Text('No text detected',
-                style: Theme.of(context).textTheme.subhead),
-          ));
-    }
-    return Container(
-      child: ListView.builder(
-          padding: const EdgeInsets.all(1.0),
-          itemCount: texts.length,
-          itemBuilder: (context, i) {
-            return _buildTextRow(texts[i].text);
-          }),
-
-    );
-  }
   Future<Size> _getImageSize(Image image) {
     Completer<Size> completer = Completer<Size>();
     image.image.resolve(ImageConfiguration()).addListener(
-        (ImageInfo info, bool _) => completer.complete(
+            (ImageInfo info, bool _) => completer.complete(
             Size(info.image.width.toDouble(), info.image.height.toDouble())));
     return completer.future;
   }
