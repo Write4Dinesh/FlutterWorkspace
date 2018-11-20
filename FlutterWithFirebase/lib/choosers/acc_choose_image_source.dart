@@ -115,7 +115,7 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
 
         break;
       case AppConstants.LABEL_SCANNER:
-        detailObj = AccLabelScanDetail(pickedImageFile, this.scannerModel.type);
+        detailObj = AccLabelScanDetail(pickedImageFile);
 
         break;
     }
