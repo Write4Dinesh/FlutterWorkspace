@@ -40,12 +40,12 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE),
+          title: Text(widget.scannerModel.title),
         ),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              buildTitleWidget(context, scannerModel.title),
+              buildTitleWidget(context, widget.title),
               buildButtonWidgets(
                   context, PICK_IMAGE_LABEL_CAMERA, CAMERA_SOURCE),
               buildButtonWidgets(
