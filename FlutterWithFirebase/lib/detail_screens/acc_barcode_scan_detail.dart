@@ -7,9 +7,8 @@ import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 
 class AccBarcodeScanDetail extends StatefulWidget {
   final File _file;
-  final String _scannerType;
 
-  AccBarcodeScanDetail(this._file, this._scannerType);
+  AccBarcodeScanDetail(this._file);
 
   @override
   State<StatefulWidget> createState() {
@@ -85,24 +84,9 @@ class _AccScanDetailState extends State<AccBarcodeScanDetail> {
             itemCount: barcodes.length,
             itemBuilder: (context, i) {
               var text;
-
               final barcode = barcodes[i];
-              switch (widget._scannerType) {
-                case AppConstants.BARCODE_SCANNER:
-                  VisionBarcode res = barcode as VisionBarcode;
-                  text = "Raw Value: ${res.rawValue}";
-                  break;
-                case AppConstants.FACE_SCANNER:
-                  VisionFace res = barcode as VisionFace;
-                  text =
-                      "Raw Value: ${res.smilingProbability},${res.trackingID}";
-                  break;
-                case AppConstants.LABEL_SCANNER:
-                  VisionLabel res = barcode as VisionLabel;
-                  text = "Raw Value: ${res.label}";
-                  break;
-              }
-
+              VisionBarcode res = barcode as VisionBarcode;
+              text = "Raw Value: ${res.rawValue}";
               return _buildTextRow(text);
             }),
       ),

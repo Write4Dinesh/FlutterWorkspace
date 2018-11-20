@@ -107,8 +107,7 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
 
         break;
       case AppConstants.BARCODE_SCANNER:
-        detailObj =
-            AccBarcodeScanDetail(pickedImageFile, this.scannerModel.type);
+        detailObj = AccBarcodeScanDetail(pickedImageFile);
 
         break;
       case AppConstants.FACE_SCANNER:
