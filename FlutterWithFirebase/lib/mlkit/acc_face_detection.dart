@@ -1,4 +1,4 @@
-import 'package:flutfire/mlkit/ml_detail.dart';
+import 'package:flutfire/mlkit/acc_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';

@@ -1,9 +1,9 @@
-import 'package:flutfire/mlkit/ml_businesscard_scan.dart';
+import 'package:flutfire/mlkit/acc_businesscard_scan.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'mlkit/ml_home.dart';
+import 'mlkit/acc_home.dart';
 
 void main() => runApp(new MyApp());
 

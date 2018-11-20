@@ -1,31 +1,31 @@
-import 'package:flutfire/mlkit/ml_detail.dart';
+import 'package:flutfire/mlkit/acc_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'acc_businesscard_scan.dart';
+import 'acc_barcode_scan.dart';
+import 'acc_face_detection.dart';
+import 'acc_lable_scan.dart';
+import 'package:flutfire/acc_app_constants.dart' as AppContstants;
+import 'package:flutfire/business_card_scanner_model.dart';
 
 const String TEXT_SCANNER = 'TEXT_SCANNER';
 const String BARCODE_SCANNER = 'BARCODE_SCANNER';
 const String LABEL_SCANNER = 'LABEL_SCANNER';
 const String FACE_SCANNER = 'FACE_SCANNER';
 
-class AccBarcodeScanner extends StatefulWidget {
-  final String title;
-
-  AccBarcodeScanner({Key key, this.title: 'Barcode Scan'}) : super(key: key);
+class AccHome extends StatefulWidget {
+  AccHome({Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AccBarcodeScannerState(title);
+  State<StatefulWidget> createState() => _AccHomeState();
 }
 
-class _AccBarcodeScannerState extends State<AccBarcodeScanner> {
+class _AccHomeState extends State<AccHome> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
-  String title;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _AccBarcodeScannerState(String title) {
-    this.title = title;
-  }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   File _file;
   String _selectedScanner = TEXT_SCANNER;
@@ -35,20 +35,20 @@ class _AccBarcodeScannerState extends State<AccBarcodeScanner> {
     final columns = List<Widget>();
 
     //choose the ML feature
-    columns.add(buildRowTitle(context, title));
+    columns.add(buildRowTitle(context, 'Select Scanner Type'));
     columns.add(buildSelectScannerRowWidget(context));
-
-    columns.add(buildRowTitle(context, 'Pick Image'));
-    columns.add(buildSelectImageRowWidget(context));
 
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('HelloMLFire'),
+          title: Text(AppContstants.HOME_PAGE_TITLE),
         ),
         body: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: columns,
           ),
         ));
@@ -65,64 +65,49 @@ class _AccBarcodeScannerState extends State<AccBarcodeScanner> {
     ));
   }
 
-  Widget buildSelectImageRowWidget(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: RaisedButton(
-              color: Colors.green,
-              textColor: Colors.white,
-              splashColor: Colors.blueGrey,
-              onPressed: () {
-                onPickImageSelected(CAMERA_SOURCE);
-              },
-              child: const Text('Camera')),
-        )),
-        Expanded(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: RaisedButton(
-              color: Colors.green,
-              textColor: Colors.white,
-              splashColor: Colors.blueGrey,
-              onPressed: () {
-                onPickImageSelected(GALLERY_SOURCE);
-              },
-              child: const Text('Gallery')),
-        ))
-      ],
-    );
+  Widget getRaisedButton(
+      BuildContext context, String label, MaterialPageRoute goToPage) {
+    return SizedBox(
+        width: 200.0,
+        child: RaisedButton(
+            color: Colors.green,
+            textColor: Colors.white,
+            splashColor: Colors.blueGrey,
+            onPressed: () {
+              Navigator.of(context).push(goToPage);
+              //onPickImageSelected(CAMERA_SOURCE);
+            },
+            child: Text(label)));
   }
 
   Widget buildSelectScannerRowWidget(BuildContext context) {
-    return Wrap(
+    BusinessCardScannerModel businessCardScanner = BusinessCardScannerModel()
+      ..scannerType = AppContstants.TEXT_SCANNER
+      ..title = "Business Card Scanner";
+
+    final MaterialPageRoute businessCarePage = MaterialPageRoute(
+        builder: (context) => ACCBusinessCardScanner(businessCardScanner));
+    final MaterialPageRoute faceScannerPage =
+        MaterialPageRoute(builder: (context) => AccFaceScanner());
+    final MaterialPageRoute labelScannerPage =
+        MaterialPageRoute(builder: (context) => AccLableScanner());
+    final MaterialPageRoute barcodeScannerPage =
+        MaterialPageRoute(builder: (context) => AccBarcodeScanner());
+    List labels = <String>[
+      "BusinessCard Scanner",
+      "Face Scanner",
+      "Label Scanner",
+      "Barcode Scanner"
+    ];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        RadioListTile<String>(
-          title: Text('Text Recognition'),
-          groupValue: _selectedScanner,
-          value: TEXT_SCANNER,
-          onChanged: onScannerSelected,
-        ),
-        RadioListTile<String>(
-          title: Text('Barcode Scanner'),
-          groupValue: _selectedScanner,
-          value: BARCODE_SCANNER,
-          onChanged: onScannerSelected,
-        ),
-        RadioListTile<String>(
-          title: Text('Label Scanner'),
-          groupValue: _selectedScanner,
-          value: LABEL_SCANNER,
-          onChanged: onScannerSelected,
-        ),
-        RadioListTile<String>(
-          title: Text('Face Scanner'),
-          groupValue: _selectedScanner,
-          value: FACE_SCANNER,
-          onChanged: onScannerSelected,
-        )
+        getRaisedButton(context, labels[0], businessCarePage),
+        getRaisedButton(context, labels[1], faceScannerPage),
+        getRaisedButton(context, labels[2], labelScannerPage),
+        getRaisedButton(context, labels[3], barcodeScannerPage),
       ],
     );
   }

@@ -1,14 +1,15 @@
-import 'package:flutfire/mlkit/ml_businesscard_scan.dart';
+import 'package:flutfire/mlkit/acc_businesscard_scan.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
+import 'package:flutfire/acc_app_constants.dart' as AppConstants;
 
-class AccScanDetail extends StatefulWidget {
+class AccFaceScanDetail extends StatefulWidget {
   final File _file;
   final String _scannerType;
 
-  AccScanDetail(this._file, this._scannerType);
+  AccFaceScanDetail(this._file, this._scannerType);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +17,7 @@ class AccScanDetail extends StatefulWidget {
   }
 }
 
-class _AccScanDetailState extends State<AccScanDetail> {
+class _AccScanDetailState extends State<AccFaceScanDetail> {
   FirebaseVisionTextDetector textDetector = FirebaseVisionTextDetector.instance;
   FirebaseVisionBarcodeDetector barcodeDetector =
       FirebaseVisionBarcodeDetector.instance;
@@ -42,28 +43,28 @@ class _AccScanDetailState extends State<AccScanDetail> {
   void analyzeLabels() async {
     try {
       var currentLabels;
-      if (widget._scannerType == TEXT_SCANNER) {
+      if (widget._scannerType == AppConstants.TEXT_SCANNER) {
         currentLabels = await textDetector.detectFromPath(widget._file.path);
         if (this.mounted) {
           setState(() {
             _currentTextLabels = currentLabels;
           });
         }
-      } else if (widget._scannerType == BARCODE_SCANNER) {
+      } else if (widget._scannerType == AppConstants.BARCODE_SCANNER) {
         currentLabels = await barcodeDetector.detectFromPath(widget._file.path);
         if (this.mounted) {
           setState(() {
             _currentBarcodeLabels = currentLabels;
           });
         }
-      } else if (widget._scannerType == LABEL_SCANNER) {
+      } else if (widget._scannerType == AppConstants.LABEL_SCANNER) {
         currentLabels = await labelDetector.detectFromPath(widget._file.path);
         if (this.mounted) {
           setState(() {
             _currentLabelLabels = currentLabels;
           });
         }
-      } else if (widget._scannerType == FACE_SCANNER) {
+      } else if (widget._scannerType == AppConstants.FACE_SCANNER) {
         currentLabels = await faceDetector.detectFromPath(widget._file.path);
         if (this.mounted) {
           setState(() {
@@ -90,58 +91,9 @@ class _AccScanDetailState extends State<AccScanDetail> {
           centerTitle: true,
           title: Text(widget._scannerType),
         ),
-        body: Column(
-          children: <Widget>[
-            buildImage(context),
-            widget._scannerType == TEXT_SCANNER
-                ? buildTextList(_currentTextLabels)
-                : widget._scannerType == BARCODE_SCANNER
-                    ? buildBarcodeList<VisionBarcode>(_currentBarcodeLabels)
-                    : widget._scannerType == FACE_SCANNER
-                        ? buildBarcodeList<VisionFace>(_currentFaceLabels)
-                        : buildBarcodeList<VisionLabel>(_currentLabelLabels)
-          ],
-        ));
+        body: buildTextList(_currentTextLabels));
   }
 
-  Widget buildImage(BuildContext context) {
-    return Expanded(
-      flex: 2,
-      child: Container(
-          decoration: BoxDecoration(color: Colors.black),
-          child: Center(
-            child: widget._file == null
-                ? Text('No Image')
-                : FutureBuilder<Size>(
-                    future: _getImageSize(
-                        Image.file(widget._file, fit: BoxFit.fitWidth)),
-                    builder:
-                        (BuildContext context, AsyncSnapshot<Size> snapshot) {
-                      if (snapshot.hasData) {
-                        return Container(
-                            foregroundDecoration: (widget._scannerType ==
-                                    TEXT_SCANNER)
-                                ? TextDetectDecoration(
-                                    _currentTextLabels, snapshot.data)
-                                : (widget._scannerType == FACE_SCANNER)
-                                    ? FaceDetectDecoration(
-                                        _currentFaceLabels, snapshot.data)
-                                    : (widget._scannerType == BARCODE_SCANNER)
-                                        ? BarcodeDetectDecoration(
-                                            _currentBarcodeLabels,
-                                            snapshot.data)
-                                        : LabelDetectDecoration(
-                                            _currentLabelLabels, snapshot.data),
-                            child:
-                                Image.file(widget._file, fit: BoxFit.fitWidth));
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    },
-                  ),
-          )),
-    );
-  }
 
   Widget buildBarcodeList<T>(List<T> barcodes) {
     if (barcodes.length == 0) {
@@ -164,16 +116,16 @@ class _AccScanDetailState extends State<AccScanDetail> {
 
               final barcode = barcodes[i];
               switch (widget._scannerType) {
-                case BARCODE_SCANNER:
+                case AppConstants.BARCODE_SCANNER:
                   VisionBarcode res = barcode as VisionBarcode;
                   text = "Raw Value: ${res.rawValue}";
                   break;
-                case FACE_SCANNER:
+                case AppConstants.FACE_SCANNER:
                   VisionFace res = barcode as VisionFace;
                   text =
                       "Raw Value: ${res.smilingProbability},${res.trackingID}";
                   break;
-                case LABEL_SCANNER:
+                case AppConstants.LABEL_SCANNER:
                   VisionLabel res = barcode as VisionLabel;
                   text = "Raw Value: ${res.label}";
                   break;
@@ -182,6 +134,16 @@ class _AccScanDetailState extends State<AccScanDetail> {
               return _buildTextRow(text);
             }),
       ),
+    );
+  }
+
+
+  Widget _buildTextRow(text) {
+    return ListTile(
+      title: Text(
+        "$text",
+      ),
+      dense: true,
     );
   }
 
@@ -194,28 +156,16 @@ class _AccScanDetailState extends State<AccScanDetail> {
                 style: Theme.of(context).textTheme.subhead),
           ));
     }
-    return Expanded(
-      flex: 1,
-      child: Container(
-        child: ListView.builder(
-            padding: const EdgeInsets.all(1.0),
-            itemCount: texts.length,
-            itemBuilder: (context, i) {
-              return _buildTextRow(texts[i].text);
-            }),
-      ),
+    return Container(
+      child: ListView.builder(
+          padding: const EdgeInsets.all(1.0),
+          itemCount: texts.length,
+          itemBuilder: (context, i) {
+            return _buildTextRow(texts[i].text);
+          }),
+
     );
   }
-
-  Widget _buildTextRow(text) {
-    return ListTile(
-      title: Text(
-        "$text",
-      ),
-      dense: true,
-    );
-  }
-
   Future<Size> _getImageSize(Image image) {
     Completer<Size> completer = Completer<Size>();
     image.image.resolve(ImageConfiguration()).addListener(

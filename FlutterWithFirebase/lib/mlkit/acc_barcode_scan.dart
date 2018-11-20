@@ -1,35 +1,30 @@
-import 'package:flutfire/mlkit/ml_detail.dart';
+import 'package:flutfire/mlkit/acc_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutfire/acc_app_constants.dart' as AppConstants;
 
-const String TEXT_SCANNER = 'TEXT_SCANNER';
-const String BARCODE_SCANNER = 'BARCODE_SCANNER';
-const String LABEL_SCANNER = 'LABEL_SCANNER';
-const String FACE_SCANNER = 'FACE_SCANNER';
+class AccBarcodeScanner extends StatefulWidget {
+  final String title;
 
-class AccLableScanner extends StatefulWidget {
-  String title;
-
-  AccLableScanner({Key key, this.title: 'Label Scan'}) : super(key: key);
+  AccBarcodeScanner({Key key, this.title: 'Barcode Scan'}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AccLableScannerState(title);
+  State<StatefulWidget> createState() => _AccBarcodeScannerState(title);
 }
 
-class _AccLableScannerState extends State<AccLableScanner> {
+class _AccBarcodeScannerState extends State<AccBarcodeScanner> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
   String title;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _AccLableScannerState(String title) {
+  _AccBarcodeScannerState(String title) {
     this.title = title;
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   File _file;
-  String _selectedScanner = TEXT_SCANNER;
+  String _selectedScanner = AppConstants.TEXT_SCANNER;
 
   @override
   Widget build(BuildContext context) {
@@ -103,25 +98,25 @@ class _AccLableScannerState extends State<AccLableScanner> {
         RadioListTile<String>(
           title: Text('Text Recognition'),
           groupValue: _selectedScanner,
-          value: TEXT_SCANNER,
+          value: AppConstants.TEXT_SCANNER,
           onChanged: onScannerSelected,
         ),
         RadioListTile<String>(
           title: Text('Barcode Scanner'),
           groupValue: _selectedScanner,
-          value: BARCODE_SCANNER,
+          value: AppConstants.BARCODE_SCANNER,
           onChanged: onScannerSelected,
         ),
         RadioListTile<String>(
           title: Text('Label Scanner'),
           groupValue: _selectedScanner,
-          value: LABEL_SCANNER,
+          value: AppConstants.LABEL_SCANNER,
           onChanged: onScannerSelected,
         ),
         RadioListTile<String>(
           title: Text('Face Scanner'),
           groupValue: _selectedScanner,
-          value: FACE_SCANNER,
+          value: AppConstants.FACE_SCANNER,
           onChanged: onScannerSelected,
         )
       ],
