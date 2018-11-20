@@ -111,7 +111,7 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
 
         break;
       case AppConstants.FACE_SCANNER:
-        detailObj = AccFaceScanDetail(pickedImageFile, this.scannerModel.type);
+        detailObj = AccFaceScanDetail(pickedImageFile);
 
         break;
       case AppConstants.LABEL_SCANNER:
