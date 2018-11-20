@@ -1,15 +1,15 @@
-import 'package:flutfire/mlkit/acc_businesscard_scan.dart';
+import 'package:flutfire/choosers/acc_choose_image_source.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
-import 'package:flutfire/acc_app_constants.dart' as AppConstants;
+import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 
-class AccBarcodeScanDetail extends StatefulWidget {
+class AccLabelScanDetail extends StatefulWidget {
   final File _file;
   final String _scannerType;
 
-  AccBarcodeScanDetail(this._file, this._scannerType);
+  AccLabelScanDetail(this._file, this._scannerType);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +17,7 @@ class AccBarcodeScanDetail extends StatefulWidget {
   }
 }
 
-class _AccScanDetailState extends State<AccBarcodeScanDetail> {
+class _AccScanDetailState extends State<AccLabelScanDetail> {
   FirebaseVisionTextDetector textDetector = FirebaseVisionTextDetector.instance;
   FirebaseVisionBarcodeDetector barcodeDetector =
       FirebaseVisionBarcodeDetector.instance;
@@ -89,11 +89,10 @@ class _AccScanDetailState extends State<AccBarcodeScanDetail> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget._scannerType),
+          title: Text(AppConstants.LABEL_SCANNER_SCREEN_TITLE),
         ),
         body: buildTextList(_currentTextLabels));
   }
-
 
   Widget buildBarcodeList<T>(List<T> barcodes) {
     if (barcodes.length == 0) {
@@ -137,7 +136,6 @@ class _AccScanDetailState extends State<AccBarcodeScanDetail> {
     );
   }
 
-
   Widget _buildTextRow(text) {
     return ListTile(
       title: Text(
@@ -163,9 +161,9 @@ class _AccScanDetailState extends State<AccBarcodeScanDetail> {
           itemBuilder: (context, i) {
             return _buildTextRow(texts[i].text);
           }),
-
     );
   }
+
   Future<Size> _getImageSize(Image image) {
     Completer<Size> completer = Completer<Size>();
     image.image.resolve(ImageConfiguration()).addListener(
@@ -197,6 +195,7 @@ class BarcodeDetectDecoration extends Decoration {
 class _BarcodeDetectPainter extends BoxPainter {
   final List<VisionBarcode> _barcodes;
   final Size _originalImageSize;
+
   _BarcodeDetectPainter(barcodes, originalImageSize)
       : _barcodes = barcodes,
         _originalImageSize = originalImageSize;
@@ -225,6 +224,7 @@ class _BarcodeDetectPainter extends BoxPainter {
 class TextDetectDecoration extends Decoration {
   final Size _originalImageSize;
   final List<VisionText> _texts;
+
   TextDetectDecoration(List<VisionText> texts, Size originalImageSize)
       : _texts = texts,
         _originalImageSize = originalImageSize;
@@ -238,6 +238,7 @@ class TextDetectDecoration extends Decoration {
 class _TextDetectPainter extends BoxPainter {
   final List<VisionText> _texts;
   final Size _originalImageSize;
+
   _TextDetectPainter(texts, originalImageSize)
       : _texts = texts,
         _originalImageSize = originalImageSize;
@@ -266,6 +267,7 @@ class _TextDetectPainter extends BoxPainter {
 class FaceDetectDecoration extends Decoration {
   final Size _originalImageSize;
   final List<VisionFace> _faces;
+
   FaceDetectDecoration(List<VisionFace> faces, Size originalImageSize)
       : _faces = faces,
         _originalImageSize = originalImageSize;
@@ -279,6 +281,7 @@ class FaceDetectDecoration extends Decoration {
 class _FaceDetectPainter extends BoxPainter {
   final List<VisionFace> _faces;
   final Size _originalImageSize;
+
   _FaceDetectPainter(faces, originalImageSize)
       : _faces = faces,
         _originalImageSize = originalImageSize;
@@ -307,6 +310,7 @@ class _FaceDetectPainter extends BoxPainter {
 class LabelDetectDecoration extends Decoration {
   final Size _originalImageSize;
   final List<VisionLabel> _labels;
+
   LabelDetectDecoration(List<VisionLabel> labels, Size originalImageSize)
       : _labels = labels,
         _originalImageSize = originalImageSize;
@@ -320,6 +324,7 @@ class LabelDetectDecoration extends Decoration {
 class _LabelDetectPainter extends BoxPainter {
   final List<VisionLabel> _labels;
   final Size _originalImageSize;
+
   _LabelDetectPainter(labels, originalImageSize)
       : _labels = labels,
         _originalImageSize = originalImageSize;

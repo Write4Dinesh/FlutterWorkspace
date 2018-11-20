@@ -1,36 +1,38 @@
-import 'package:flutfire/mlkit/acc_businesscard_scan_detail.dart';
+import 'package:flutfire/detail_screens/acc_businesscard_scan_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:flutfire/acc_app_constants.dart' as AppConstants;
-import 'package:flutfire/business_card_scanner_model.dart';
-import 'package:flutfire/scanner_model.dart';
+import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
+import 'package:flutfire/models/scanner_model.dart';
+import 'package:flutfire/detail_screens/acc_barcode_scan_detail.dart';
+import 'package:flutfire/detail_screens/acc_face_scan_detail.dart';
+import 'package:flutfire/detail_screens/acc_label_scan_detail.dart';
 
 const String PICK_IMAGE_LABEL_CAMERA = 'Camera';
 const String PICK_IMAGE_LABEL_GALLERY = 'Gallery';
 
 /* ************************WIDGET class **************************/
-class ACCBusinessCardScanner extends StatefulWidget {
+class ACCChooseImageSource extends StatefulWidget {
   final String title;
   final ScannerModel scannerModel;
 
-  ACCBusinessCardScanner(this.scannerModel,
+  ACCChooseImageSource(this.scannerModel,
       {Key key, this.title: 'Pick an image from'})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>
-      _ACCBusinessCardScannerState(scannerModel);
+      _ACCChooseImageSourceState(scannerModel);
 }
 /* ************************STATE class **************************/
 
-class _ACCBusinessCardScannerState extends State<ACCBusinessCardScanner> {
+class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
   static const String CAMERA_SOURCE = 'CAMERA_SOURCE';
   static const String GALLERY_SOURCE = 'GALLERY_SOURCE';
   ScannerModel scannerModel;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _ACCBusinessCardScannerState(this.scannerModel);
+  _ACCChooseImageSourceState(this.scannerModel);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class _ACCBusinessCardScannerState extends State<ACCBusinessCardScanner> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.BUSINESS_CARD_SCAN_TITLE),
+          title: Text(AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -98,14 +100,27 @@ class _ACCBusinessCardScannerState extends State<ACCBusinessCardScanner> {
   }
 
   void goToNextScreen(BuildContext context, File pickedImageFile) {
-    var type;
+    var detailObj;
     switch (this.scannerModel.type) {
       case AppConstants.TEXT_SCANNER:
-        type = AccBusinessCardScanDetail(
-            pickedImageFile, AppConstants.TEXT_SCANNER);
+        detailObj = AccBusinessCardScanDetail(pickedImageFile);
+
+        break;
+      case AppConstants.BARCODE_SCANNER:
+        detailObj =
+            AccBarcodeScanDetail(pickedImageFile, this.scannerModel.type);
+
+        break;
+      case AppConstants.FACE_SCANNER:
+        detailObj = AccFaceScanDetail(pickedImageFile, this.scannerModel.type);
+
+        break;
+      case AppConstants.LABEL_SCANNER:
+        detailObj = AccLabelScanDetail(pickedImageFile, this.scannerModel.type);
 
         break;
     }
-    Navigator.push(context, new MaterialPageRoute(builder: (context) => type));
+    Navigator.push(
+        context, new MaterialPageRoute(builder: (context) => detailObj));
   }
 }

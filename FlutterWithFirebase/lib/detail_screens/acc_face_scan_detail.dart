@@ -1,15 +1,15 @@
-import 'package:flutfire/mlkit/acc_businesscard_scan.dart';
+import 'package:flutfire/choosers/acc_choose_image_source.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
-import 'package:flutfire/acc_app_constants.dart' as AppConstants;
+import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 
-class AccBusinessCardScanDetail extends StatefulWidget {
+class AccFaceScanDetail extends StatefulWidget {
   final File _file;
   final String _scannerType;
 
-  AccBusinessCardScanDetail(this._file, this._scannerType);
+  AccFaceScanDetail(this._file, this._scannerType);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +17,7 @@ class AccBusinessCardScanDetail extends StatefulWidget {
   }
 }
 
-class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
+class _AccScanDetailState extends State<AccFaceScanDetail> {
   FirebaseVisionTextDetector textDetector = FirebaseVisionTextDetector.instance;
   FirebaseVisionBarcodeDetector barcodeDetector =
       FirebaseVisionBarcodeDetector.instance;
@@ -89,7 +89,7 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget._scannerType),
+          title: Text(AppConstants.FACE_DETECTION_SCANNER_SCREEN_TITLE),
         ),
         body: buildTextList(_currentTextLabels));
   }

@@ -2,7 +2,7 @@ import 'package:flutfire/mlkit/acc_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:flutfire/acc_app_constants.dart' as AppConstants;
+import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 
 class AccBarcodeScanner extends StatefulWidget {
   final String title;
