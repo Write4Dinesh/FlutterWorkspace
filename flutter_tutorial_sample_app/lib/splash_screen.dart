@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'screen1.dart';
 
 class AccSplashScreen extends StatefulWidget {
   @override
-  State createState() {}
+  State createState() {
+    return AccSplashState();
+  }
 }
 
 class AccSplashState extends State<AccSplashScreen> {
@@ -10,18 +14,48 @@ class AccSplashState extends State<AccSplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    MaterialApp materialApp = MaterialApp(
         title: "splash screen",
-        home: Scaffold(
-            appBar: AppBar(title: Text(_title)), body: getBodyWidget()));
-  }
-}
+        theme: ThemeData(primarySwatch: Colors.green),
+        home: Scaffold(body: getBodyWidget()));
 
-Widget getBodyWidget() {
-  return Container(
-      decoration: BoxDecoration(color: Colors.green, shape: BoxShape.rectangle),
-      child: Text(
-        "Loading....Pls wait",
-        style: TextStyle(color: Colors.white),
-      ));
+    return materialApp;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Widget getBodyWidget() {
+    return Container(
+        alignment: Alignment.center,
+        decoration:
+            BoxDecoration(color: Colors.green, shape: BoxShape.rectangle),
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          GestureDetector(child:
+          Image.asset(
+            "assets/accenture_logo.png",
+            fit: BoxFit.fill,
+          ),onTap:()=> startATimer(5,context)),
+          /*Text(
+          "Loading....Please Wait",
+          style: TextStyle(color: Colors.white),
+        )*/
+        ]));
+  }
+
+  void startATimer(int secs, context1) {
+    Duration duration = new Duration(seconds: 1);
+    Timer.periodic(duration, (Timer timer) {
+      if (secs <= 0) {
+        timer.cancel();
+        MaterialPageRoute nextPage =
+            MaterialPageRoute(builder: (context) => Screen1());
+        Navigator.of(context).push(nextPage);
+      } else {
+        secs--;
+      }
+    });
+  }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screen1.dart';
+import 'splash_screen.dart';
 
-void main() => runApp(Screen1());
+void main() => runApp(AccSplashScreen());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
