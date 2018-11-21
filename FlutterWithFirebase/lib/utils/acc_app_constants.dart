@@ -11,3 +11,4 @@ const String BUSINESS_CARD_SCANNER_SCREEN_TITLE = "Business Card Scanner";
 const String BARCODE_SCANNER_SCREEN_TITLE = "Barcode Scanner";
 const String LABEL_SCANNER_SCREEN_TITLE = "Label Scanner";
 const String FACE_DETECTION_SCANNER_SCREEN_TITLE = "Face Detection Scanner";
+bool firstLaunch = true;
