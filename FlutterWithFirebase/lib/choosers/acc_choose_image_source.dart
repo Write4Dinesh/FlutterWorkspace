@@ -7,6 +7,7 @@ import 'package:flutfire/models/scanner_model.dart';
 import 'package:flutfire/detail_screens/acc_barcode_scan_detail.dart';
 import 'package:flutfire/detail_screens/acc_face_scan_detail.dart';
 import 'package:flutfire/detail_screens/acc_label_scan_detail.dart';
+import 'package:flutfire/utils/widget_utility.dart';
 
 const String PICK_IMAGE_LABEL_CAMERA = 'Camera';
 const String PICK_IMAGE_LABEL_GALLERY = 'Gallery';
@@ -44,11 +45,14 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
         ),
         body: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               buildTitleWidget(context, widget.title),
-              buildButtonWidgets(
+              buildRaisedButton(
                   context, PICK_IMAGE_LABEL_CAMERA, CAMERA_SOURCE),
-              buildButtonWidgets(
+              buildRaisedButton(
                   context, PICK_IMAGE_LABEL_GALLERY, GALLERY_SOURCE)
             ],
           ),
@@ -67,15 +71,17 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
   }
 
   /* ++++++++++++++++++++++ build Raised Buttons to pick image form either Gallery or Camera +++++++++++++++++++ */
-  Widget buildButtonWidgets(
+  Widget buildRaisedButton(
       BuildContext context, String label, String scanType) {
     return RaisedButton(
+        padding: EdgeInsets.only(left: 50.0, right: 50.0),
         color: Colors.green,
         textColor: Colors.white,
         splashColor: Colors.blueGrey,
         onPressed: () {
           onPickImageSelected(scanType);
         },
+        shape: WidgetUtility.getShape(5.0),
         child: Text(label));
   }
 

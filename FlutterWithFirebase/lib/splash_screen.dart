@@ -32,15 +32,12 @@ class AccSplashState extends State<AccSplashScreen> {
         decoration:
             BoxDecoration(color: Colors.green, shape: BoxShape.rectangle),
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          GestureDetector(child:
-          Image.asset(
-            "assets/accenture_logo.png",
-            fit: BoxFit.fill,
-          ),onTap:()=> startATimer(5,context)),
-          /*Text(
-          "Loading....Please Wait",
-          style: TextStyle(color: Colors.white),
-        )*/
+          GestureDetector(
+              child: Image.asset(
+                "assets/accenture_logo.png",
+                fit: BoxFit.fill,
+              ),
+              onTap: () => startATimer(5, context)),
         ]));
   }
 

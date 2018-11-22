@@ -3,7 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutfire/acc_home.dart';
 import 'dart:async';
-import 'utils/acc_app_constants.dart' as AccConstants;
+import 'utils/acc_app_constants.dart' as AppConstants;
 
 void main() => runApp(new MyApp());
 //void main() => runApp(AccSplashScreen());
@@ -18,20 +18,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'HelloFireML',
+      title: AppConstants.APP_NAME,
       theme: new ThemeData(
         primarySwatch: Colors.green,
       ),
+      routes: <String, WidgetBuilder>{
+        AppConstants.SCREEN_NAME_SPLASH: (BuildContext context) =>
+            AccSplashScreen(),
+        AppConstants.SCREEN_NAME_HOME: (BuildContext context) => AccHome()
+      },
       navigatorObservers: <NavigatorObserver>[observer],
       // home: new WallScreen(analytics: analytics, observer: observer),
-      home: AccConstants.firstLaunch ? AccSplashScreen() : AccHome(),
+      home: AppConstants.firstLaunch ? AccSplashScreen() : AccHome(),
     );
   }
 }
 
 class AccSplashScreen extends StatefulWidget {
   AccSplashScreen() {
-    AccConstants.firstLaunch = false;
+    AppConstants.firstLaunch = false;
   }
 
   @override
@@ -59,26 +64,21 @@ class AccSplashState extends State<AccSplashScreen> {
                 "assets/accenture_logo.png",
                 fit: BoxFit.fill,
               ),
-              onTap: () => startATimer(5, context)),
-          /*Text(
-          "Loading....Please Wait",
-          style: TextStyle(color: Colors.white),
-        )*/
+              onTap: () => goToHomeScreen(1, context)),
         ]));
-    startATimer(5, context);
+    goToHomeScreen(3, context);
     return container;
   }
 
-  void startATimer(int secs, context1) {
+  void goToHomeScreen(int delayInSecs, context1) {
     Duration duration = new Duration(seconds: 1);
     Timer.periodic(duration, (Timer timer) {
-      if (secs <= 0) {
+      if (delayInSecs <= 0) {
         timer.cancel();
-        MaterialPageRoute nextPage =
-            MaterialPageRoute(builder: (context) => AccHome());
-        Navigator.of(context1).push(nextPage);
+        NavigatorState navigatorState = Navigator.of(context1);
+        navigatorState.popAndPushNamed(AppConstants.SCREEN_NAME_HOME);
       } else {
-        secs--;
+        delayInSecs--;
       }
     });
   }

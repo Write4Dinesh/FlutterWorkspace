@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutfire/choosers/acc_choose_image_source.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppContstants;
 import 'package:flutfire/models/scanner_model.dart';
+import 'package:flutfire/utils/widget_utility.dart';
 
 class AccHome extends StatefulWidget {
   AccHome({Key key}) : super(key: key);
@@ -30,11 +31,11 @@ class _AccHomeState extends State<AccHome> {
     columns.add(buildRowTitle(context, 'Select Scanner Type'));
     columns.add(buildSelectScannerRowWidget(context));
 
-    return Scaffold(
+    var homeScaffold = Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppContstants.HOME_PAGE_TITLE),
+          title: Text(AppContstants.APP_NAME),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -44,17 +45,23 @@ class _AccHomeState extends State<AccHome> {
             children: columns,
           ),
         ));
+    var willPopScope = WillPopScope(onWillPop: _onWillPop, child: homeScaffold);
+
+    return willPopScope;
   }
 
   Widget buildRowTitle(BuildContext context, String title) {
     return Center(
         child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 26.0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.headline,
-      ),
-    ));
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 26.0),
+          child: Text(
+            title,
+            style: Theme
+                .of(context)
+                .textTheme
+                .headline,
+          ),
+        ));
   }
 
   Widget getRaisedButton(BuildContext context, ScannerModel model) {
@@ -64,15 +71,14 @@ class _AccHomeState extends State<AccHome> {
             color: Colors.green,
             textColor: Colors.white,
             splashColor: Colors.blueGrey,
-            onPressed: () {
-              goToNextScreen(model);
-            },
+            onPressed: () => goToNextScreen(model),
+            shape: WidgetUtility.getShape(5.0),
             child: Text(model.title)));
   }
 
   void goToNextScreen(ScannerModel model) {
     final MaterialPageRoute chooseImageSourcePage =
-        MaterialPageRoute(builder: (context) => ACCChooseImageSource(model));
+    MaterialPageRoute(builder: (context) => ACCChooseImageSource(model));
     Navigator.of(context).push(chooseImageSourcePage);
   }
 
@@ -144,5 +150,27 @@ class _AccHomeState extends State<AccHome> {
         content: Text(e.toString()),
       ));
     }
+  }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) =>
+      new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit the App'),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => exit(0),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    ) ??
+        false;
   }
 }
