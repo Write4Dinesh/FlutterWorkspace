@@ -63,15 +63,6 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
         ));
   }
 
-  Widget _buildTextRow(text) {
-    return ListTile(
-      title: Text(
-        "$text",
-      ),
-      dense: true,
-    );
-  }
-
   Widget buildTextList(List<VisionText> texts) {
     if (texts.length == 0) {
       return Expanded(
@@ -91,6 +82,15 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
                 return _buildTextRow(texts[i].text);
               }),
         ));
+  }
+
+  Widget _buildTextRow(text) {
+    return ListTile(
+      title: Text(
+        "$text",
+      ),
+      dense: true,
+    );
   }
 
   Future<Size> _getImageSize(Image image) {
