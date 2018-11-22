@@ -20,7 +20,6 @@ class _AccHomeState extends State<AccHome> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  File _file;
   String _selectedScanner = AppContstants.TEXT_SCANNER;
 
   @override
@@ -45,6 +44,7 @@ class _AccHomeState extends State<AccHome> {
             children: columns,
           ),
         ));
+
     var willPopScope = WillPopScope(onWillPop: _onWillPop, child: homeScaffold);
 
     return willPopScope;
@@ -53,15 +53,12 @@ class _AccHomeState extends State<AccHome> {
   Widget buildRowTitle(BuildContext context, String title) {
     return Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 26.0),
-          child: Text(
-            title,
-            style: Theme
-                .of(context)
-                .textTheme
-                .headline,
-          ),
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 26.0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.headline,
+      ),
+    ));
   }
 
   Widget getRaisedButton(BuildContext context, ScannerModel model) {
@@ -78,7 +75,7 @@ class _AccHomeState extends State<AccHome> {
 
   void goToNextScreen(ScannerModel model) {
     final MaterialPageRoute chooseImageSourcePage =
-    MaterialPageRoute(builder: (context) => ACCChooseImageSource(model));
+        MaterialPageRoute(builder: (context) => ACCChooseImageSource(model));
     Navigator.of(context).push(chooseImageSourcePage);
   }
 
@@ -154,23 +151,22 @@ class _AccHomeState extends State<AccHome> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) =>
-      new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit the App'),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
-          ),
-          new FlatButton(
-            onPressed: () => exit(0),
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+          context: context,
+          builder: (context) => new AlertDialog(
+                title: new Text('Are you sure?'),
+                content: new Text('Do you want to exit the App'),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: new Text('No'),
+                  ),
+                  new FlatButton(
+                    onPressed: () => exit(0),
+                    child: new Text('Yes'),
+                  ),
+                ],
+              ),
+        ) ??
         false;
   }
 }

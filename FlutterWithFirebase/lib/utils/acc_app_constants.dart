@@ -1,6 +1,6 @@
 library constants;
 
-const String APP_NAME = "HelloMLFire";
+const String APP_NAME = "FlutterForAccenture";
 
 const String TEXT_SCANNER = 'TEXT_SCANNER';
 const String BARCODE_SCANNER = 'BARCODE_SCANNER';

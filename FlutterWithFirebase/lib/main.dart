@@ -58,14 +58,25 @@ class AccSplashState extends State<AccSplashScreen> {
         alignment: Alignment.center,
         decoration:
             BoxDecoration(color: Colors.green, shape: BoxShape.rectangle),
-        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          GestureDetector(
-              child: Image.asset(
-                "assets/accenture_logo.png",
-                fit: BoxFit.fill,
-              ),
-              onTap: () => goToHomeScreen(1, context)),
-        ]));
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                  child: Image.asset(
+                    "assets/accenture_logo.png",
+                    fit: BoxFit.fill,
+                  ),
+                  onTap: () => goToHomeScreen(1, context)),
+              Padding(padding: EdgeInsets.only(top:200.0), child:Text("Flutter For Accenture",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.bold))),
+
+            ]));
     goToHomeScreen(3, context);
     return container;
   }

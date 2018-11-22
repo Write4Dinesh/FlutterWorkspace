@@ -1,4 +1,3 @@
-import 'package:flutfire/choosers/acc_choose_image_source.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
@@ -59,7 +58,9 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
           centerTitle: true,
           title: Text(AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE),
         ),
-        body: buildTextList(_currentTextLabels));
+        body: Column(
+          children: <Widget>[buildTextList(_currentTextLabels)],
+        ));
   }
 
   Widget _buildTextRow(text) {
@@ -80,14 +81,16 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
                 style: Theme.of(context).textTheme.subhead),
           ));
     }
-    return Container(
-      child: ListView.builder(
-          padding: const EdgeInsets.all(1.0),
-          itemCount: texts.length,
-          itemBuilder: (context, i) {
-            return _buildTextRow(texts[i].text);
-          }),
-    );
+    return Expanded(
+        flex: 1,
+        child: Container(
+          child: ListView.builder(
+              padding: const EdgeInsets.all(1.0),
+              itemCount: texts.length,
+              itemBuilder: (context, i) {
+                return _buildTextRow(texts[i].text);
+              }),
+        ));
   }
 
   Future<Size> _getImageSize(Image image) {
