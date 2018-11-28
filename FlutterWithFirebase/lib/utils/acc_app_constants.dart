@@ -22,3 +22,7 @@ const String SCREEN_NAME_BUSINESS_CARD = "/business";
 const String SCREEN_NAME_BARCODE = "/barcode";
 const String SCREEN_NAME_LABEL = "/label";
 const String SCREEN_NAME_FACE = "/face";
+
+const String KeySeparator = "~";
+const String CARD_FIELD_SEPARATOR = "|";
+const String LIST_OF_KEYS = "list_of_keys";

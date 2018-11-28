@@ -6,6 +6,7 @@ import 'package:flutfire/choosers/acc_choose_image_source.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppContstants;
 import 'package:flutfire/models/scanner_model.dart';
 import 'package:flutfire/utils/widget_utility.dart';
+import 'package:flutfire/detail_screens/acc_show_businesscard_list.dart';
 
 class AccHome extends StatefulWidget {
   AccHome({Key key}) : super(key: key);
@@ -61,6 +62,22 @@ class _AccHomeState extends State<AccHome> {
     ));
   }
 
+  Widget getRaisedButtonForBC(BuildContext context) {
+    return SizedBox(
+        width: 200.0,
+        child: RaisedButton(
+            color: Colors.green,
+            textColor: Colors.white,
+            splashColor: Colors.blueGrey,
+            onPressed: () {
+              final MaterialPageRoute chooseImageSourcePage = MaterialPageRoute(
+                  builder: (context) => AccShowBusinessCardList());
+              Navigator.of(context).push(chooseImageSourcePage);
+            },
+            shape: WidgetUtility.getShape(5.0),
+            child: Text("Show Business Card List")));
+  }
+
   Widget getRaisedButton(BuildContext context, ScannerModel model) {
     return SizedBox(
         width: 200.0,
@@ -102,6 +119,7 @@ class _AccHomeState extends State<AccHome> {
         getRaisedButton(context, barcodeScannerModel),
         getRaisedButton(context, labelScannerModel),
         getRaisedButton(context, faceDetectionScannerModel),
+        getRaisedButtonForBC(context)
       ],
     );
   }

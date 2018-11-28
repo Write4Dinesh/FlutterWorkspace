@@ -118,7 +118,7 @@ class _AccScanDetailState extends State<AccFaceScanDetail> {
               final barcode = barcodes[i];
 
               VisionFace res = barcode as VisionFace;
-              text = "Raw Value: ${res.smilingProbability},${res.trackingID}";
+              text = "Raw Value: ${res.smilingProbability},${res.trackingID},${res.getLandmark(FaceLandmarkType.RightEar)}";
 
               return _buildTextRow(text);
             }),

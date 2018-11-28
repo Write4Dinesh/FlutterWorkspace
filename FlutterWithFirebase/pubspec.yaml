@@ -16,6 +16,10 @@ dependencies:
   mlkit:
   image_picker:
   sqflite: any
+  url_launcher:
+  shared_preferences:
+  fluttertoast: ^2.1.1
+
 
 dev_dependencies:
   flutter_test:

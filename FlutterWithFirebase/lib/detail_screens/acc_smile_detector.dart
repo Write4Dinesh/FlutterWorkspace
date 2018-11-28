@@ -5,10 +5,10 @@ import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 
-class AccLabelScanDetail extends StatefulWidget {
+class AccSmileDetector extends StatefulWidget {
   final File _file;
 
-  AccLabelScanDetail(this._file);
+  AccSmileDetector(this._file);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,12 +16,11 @@ class AccLabelScanDetail extends StatefulWidget {
   }
 }
 
-class _AccScanDetailState extends State<AccLabelScanDetail> {
+class _AccScanDetailState extends State<AccSmileDetector> {
   FirebaseVisionLabelDetector labelDetector =
       FirebaseVisionLabelDetector.instance;
 
   List<VisionLabel> _currentLabelLabels = <VisionLabel>[];
-
   Stream sub;
   StreamSubscription<dynamic> subscription;
 
@@ -63,8 +62,8 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
         ),
         body: Column(
           children: <Widget>[
-          buildImage(context),//uncomment this line to make image visible
-            buildLabelList<VisionLabel>()
+//            buildImage(context),//uncomment this line to make image visible
+            buildSmileStatusWidget<VisionLabel>()
           ],
         ));
   }
@@ -101,11 +100,9 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
     if (nothingDetected()) {
       return false;
     }
-    VisionLabel visionLabel;
     String label;
     for (int i = 0; i < _currentLabelLabels.length; i++) {
-      visionLabel = _currentLabelLabels[i] as VisionLabel;
-      label = visionLabel.label;
+      label = _currentLabelLabels[i].label;
       if (label == "Smile") {
         return true;
       }
@@ -117,7 +114,7 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
     return _currentLabelLabels.length == 0;
   }
 
-  Widget buildLabelList<T>() {
+  Widget buildSmileStatusWidget<T>() {
     //Error case
     if (nothingDetected()) {
       return Expanded(
@@ -131,19 +128,7 @@ class _AccScanDetailState extends State<AccLabelScanDetail> {
     return Expanded(
       flex: 1,
       child: Container(
-        child: ListView.builder(
-            padding: const EdgeInsets.all(1.0),
-            itemCount: _currentLabelLabels.length,
-            itemBuilder: (context, i) {
-              var text;
-
-              final barcode = _currentLabelLabels[i];
-
-              //VisionLabel res = barcode as VisionLabel;
-              text = "Raw Value: ${barcode.label}";
-
-              return _buildTextRow(text);
-            }),
+        child: Text('Smiling:${isSmiling()}'),
       ),
     );
   }
