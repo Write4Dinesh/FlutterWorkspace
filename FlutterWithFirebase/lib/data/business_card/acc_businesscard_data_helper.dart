@@ -58,7 +58,7 @@ class AccBusinessCardDataHelper {
 
   static removeBusinessCardByKey(String key) async {
     if (key.isEmpty) {
-      return;
+      return false;
     }
     List<String> keys = await loadAllKeys();
     if (keys.isNotEmpty && keys.contains(key)) {
@@ -67,9 +67,11 @@ class AccBusinessCardDataHelper {
       if (successful) {
         keys.remove(key);
         // Remove the keys next
-        await AccDataStore.instance.saveStringByKey(
+       bool removed = await AccDataStore.instance.saveStringByKey(
             AppConstants.LIST_OF_KEYS, getKeysStringFromList(keys));
+       return removed;
       }
     }
+    return false;
   }
 }

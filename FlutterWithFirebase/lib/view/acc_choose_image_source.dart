@@ -1,4 +1,4 @@
-import 'package:flutfire/view/business_card/acc_businesscard_scan_detail.dart';
+import 'package:flutfire/view/business_card/edit_business_card.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -41,7 +41,7 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget.scannerModel.title),
+          title: Text(widget.scannerModel.screenTitle),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -109,8 +109,8 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
     var detailObj;
     switch (this.scannerModel.type) {
       case AppConstants.TEXT_SCANNER:
-        detailObj = AccBusinessCardScanDetail(
-            pickedImageFile, AccBusinessCardScanDetail.MODE_SCAN_NEW, null,null);
+        detailObj = EditBusinessCard(
+            pickedImageFile, EditBusinessCard.MODE_SCAN_NEW, null,null);
 
         break;
       case AppConstants.BARCODE_SCANNER:

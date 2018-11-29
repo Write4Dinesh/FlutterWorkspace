@@ -1,6 +1,8 @@
 class ScannerModel {
   String _type;
-  String _title;
+  String _screenTitle;
+  String _tileTitle;
+  String _tileDescription;
 
   String get type => _type;
 
@@ -8,9 +10,21 @@ class ScannerModel {
     this._type = type;
   }
 
-  String get title => _title;
+  String get screenTitle => _screenTitle;
 
-  set title(title) {
-    this._title = title;
+  set screenTitle(title) {
+    this._screenTitle = title;
+  }
+
+  String get tileTitle => _tileTitle;
+
+  set tileTitle(tileTitle) {
+    this._tileTitle = tileTitle;
+  }
+
+  String get tileDescription => _tileDescription;
+
+  set tileDescription(tileDescription) {
+    this._tileDescription = tileDescription;
   }
 }

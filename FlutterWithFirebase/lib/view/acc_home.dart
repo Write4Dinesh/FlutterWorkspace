@@ -28,8 +28,8 @@ class _AccHomeState extends State<AccHome> {
     final columns = List<Widget>();
 
     //choose the ML feature
-    columns.add(buildRowTitle(context, 'Select Scanner Type'));
-    columns.add(buildSelectScannerRowWidget(context));
+    //columns.add(buildTitle(context, 'Select Scanner Type'));
+    columns.add(buildMLKitScannerList(context));
 
     var homeScaffold = Scaffold(
         key: _scaffoldKey,
@@ -37,21 +37,21 @@ class _AccHomeState extends State<AccHome> {
           centerTitle: true,
           title: Text(AppConstants.APP_NAME),
         ),
-        body: SingleChildScrollView(
+        body: Container(color:Colors.black12 ,child:SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: columns,
-          ),
-        ));
+          )
+        )));
 
     var willPopScope = WillPopScope(onWillPop: _onWillPop, child: homeScaffold);
 
     return willPopScope;
   }
 
-  Widget buildRowTitle(BuildContext context, String title) {
+  Widget buildTitle(BuildContext context, String title) {
     return Center(
         child: Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 26.0),
@@ -62,7 +62,7 @@ class _AccHomeState extends State<AccHome> {
     ));
   }
 
-  Widget getRaisedButtonForBC(BuildContext context) {
+  Widget getRaisedButtonForBC(BuildContext context, ScannerModel model) {
     return SizedBox(
         width: 200.0,
         child: RaisedButton(
@@ -78,48 +78,53 @@ class _AccHomeState extends State<AccHome> {
             child: Text("Show Business Card List")));
   }
 
-  Widget getRaisedButton(BuildContext context, ScannerModel model) {
-    return SizedBox(
-        width: 200.0,
-        child: RaisedButton(
-            color: Colors.green,
-            textColor: Colors.white,
-            splashColor: Colors.blueGrey,
-            onPressed: () => goToNextScreen(model),
-            shape: WidgetUtility.getShape(5.0),
-            child: Text(model.title)));
-  }
-
   void goToNextScreen(ScannerModel model) {
     final MaterialPageRoute chooseImageSourcePage =
         MaterialPageRoute(builder: (context) => ACCChooseImageSource(model));
     Navigator.of(context).push(chooseImageSourcePage);
   }
 
-  Widget buildSelectScannerRowWidget(BuildContext context) {
+  Widget buildMLKitScannerList(BuildContext context) {
     ScannerModel businessCardScannerModel = ScannerModel()
       ..scannerType = AppConstants.TEXT_SCANNER
-      ..title = AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE;
+      ..tileTitle = "MLKit Text Recognition"
+      ..tileDescription = "Scan business card, edit & save."
+      ..screenTitle = AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE;
+
+    ScannerModel businessCardListModel = ScannerModel()
+      ..scannerType = AppConstants.TEXT_SCANNER_LIST
+      ..tileTitle = "same as above"
+      ..tileDescription = "same as above"
+      ..screenTitle = AppConstants.BUSINESS_CARD_LIST_SCREEN_TITLE;
+
     ScannerModel barcodeScannerModel = ScannerModel()
       ..scannerType = AppConstants.BARCODE_SCANNER
-      ..title = AppConstants.BARCODE_SCANNER_SCREEN_TITLE;
+      ..tileTitle = "MLkit Barcode Scanning"
+      ..tileDescription = "Scan barcode & search the web"
+      ..screenTitle = AppConstants.BARCODE_SCANNER_SCREEN_TITLE;
+
     ScannerModel labelScannerModel = ScannerModel()
       ..scannerType = AppConstants.LABEL_SCANNER
-      ..title = AppConstants.LABEL_SCANNER_SCREEN_TITLE;
+      ..tileTitle = "MLKit Labelling a Face parts"
+      ..tileDescription = "Scan the face & list the various parts of the face"
+      ..screenTitle = AppConstants.LABEL_SCANNER_SCREEN_TITLE;
+
     ScannerModel faceDetectionScannerModel = ScannerModel()
       ..scannerType = AppConstants.FACE_SCANNER
-      ..title = AppConstants.FACE_DETECTION_SCANNER_SCREEN_TITLE;
+      ..tileTitle = "MLKit Face detection"
+      ..tileDescription = "Scan the face & draw shape aroun the face"
+      ..screenTitle = AppConstants.FACE_DETECTION_SCANNER_SCREEN_TITLE;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        getRaisedButton(context, businessCardScannerModel),
-        getRaisedButton(context, barcodeScannerModel),
-        getRaisedButton(context, labelScannerModel),
-        getRaisedButton(context, faceDetectionScannerModel),
-        getRaisedButtonForBC(context)
+        getCard(context, businessCardScannerModel),
+        getCard(context, barcodeScannerModel),
+        getCard(context, labelScannerModel),
+        getCard(context, faceDetectionScannerModel),
+        getCard(context, businessCardListModel)
       ],
     );
   }
@@ -186,5 +191,50 @@ class _AccHomeState extends State<AccHome> {
               ),
         ) ??
         false;
+  }
+
+  Widget getCard(BuildContext context, ScannerModel model) {
+    final ThemeData theme = Theme.of(context);
+    final TextStyle titleStyle =
+        theme.textTheme.headline.copyWith(color: Colors.deepPurple);
+    final TextStyle descriptionStyle = theme.textTheme.subhead;
+    List<Widget> buttonBar = <Widget>[];
+    buttonBar.add(FlatButton(
+      child: const Text('SCAN NEW'),
+      onPressed: () {
+        goToNextScreen(model);
+      },
+    ));
+    if (model.type == AppConstants.TEXT_SCANNER) {
+      buttonBar.add(FlatButton(
+        child: const Text('VIEW SAVED'),
+        onPressed: () {
+          final MaterialPageRoute chooseImageSourcePage = MaterialPageRoute(
+              builder: (context) => AccShowBusinessCardList());
+          Navigator.of(context).push(chooseImageSourcePage);
+        },
+      ));
+    }
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.add_circle),
+            title: Text(
+              model.tileTitle,
+              style: titleStyle,
+            ),
+            subtitle: Text(model.tileDescription, style: descriptionStyle),
+          ),
+          ButtonTheme.bar(
+            // make buttons use the appropriate styles for cards
+            child: ButtonBar(
+              children: buttonBar,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

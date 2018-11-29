@@ -75,37 +75,27 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     return Expanded(
         flex: 1,
         child: Container(
+          color: Colors.black12,
           child: ListView.builder(
-              padding: const EdgeInsets.all(1.0),
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               itemCount: texts.length,
               itemBuilder: (context, i) {
-                return _buildListItem(texts[i]);
+                return getCardItem(texts[i]);
               }),
         ));
   }
 
-  Widget _buildListItem(text) {
-    return ListTile(
-      title: Text(
-        "$text",
-      ),
-      onTap: () => goToNextScreen(text),
-      dense: true,
-    );
-  }
-
   goToNextScreen(String text) async {
-    WidgetUtility.showFlutterToast(text);
     String bcard = await AccBusinessCardDataHelper.loadBusinessCardByKey(text);
     detailsScreenLaunched = true;
     MaterialPageRoute<bool> route = MaterialPageRoute(
         builder: (context) => AccViewBusinessCard(bcard, text));
     Future<bool> onNextScreenPoppedOff = Navigator.of(context).push(route);
-    onNextScreenPoppedOff.then((returnedFromDetailScreen) {
+    /*onNextScreenPoppedOff.then((returnedFromDetailScreen) {
       if (returnedFromDetailScreen) {
         WidgetUtility.showFlutterToast("Navigated back");
       }
-    });
+    });*/
   }
 
   getStringArray() {
@@ -131,5 +121,24 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
       detailsScreenLaunched = false;
       setState(() {});
     } else if (state == AppLifecycleState.paused) {}
+  }
+
+  Widget getCardItem(String title) {
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+              trailing: Icon(Icons.arrow_right),
+              title: Text(title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.deepPurpleAccent)),
+              onTap: () => goToNextScreen(title)),
+        ],
+      ),
+    );
   }
 }

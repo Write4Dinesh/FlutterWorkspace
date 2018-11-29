@@ -6,7 +6,7 @@ import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 
-class AccBusinessCardScanDetail extends StatefulWidget {
+class EditBusinessCard extends StatefulWidget {
   static final int MODE_EDIT = 1;
   static final int MODE_SCAN_NEW = 2;
   final File _file;
@@ -14,7 +14,7 @@ class AccBusinessCardScanDetail extends StatefulWidget {
   String _bcString;
   String _key;
 
-  AccBusinessCardScanDetail(this._file, this._mode, this._bcString, this._key);
+  EditBusinessCard(this._file, this._mode, this._bcString, this._key);
 
   @override
   State<StatefulWidget> createState() {
@@ -22,10 +22,10 @@ class AccBusinessCardScanDetail extends StatefulWidget {
   }
 }
 
-class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
+class _AccScanDetailState extends State<EditBusinessCard> {
   static const String LABEL_SAVE = "Save";
-  final saveTFieldContrlr = TextEditingController();
-  final bcTFieldContrlr = TextEditingController();
+  final saveTFieldController = TextEditingController();
+  final bcTFieldController = TextEditingController();
 
   FirebaseVisionTextDetector textDetector = FirebaseVisionTextDetector.instance;
 
@@ -44,7 +44,7 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
   }
 
   void analyzeLabels() async {
-    if (widget._mode == AccBusinessCardScanDetail.MODE_SCAN_NEW) {
+    if (widget._mode == EditBusinessCard.MODE_SCAN_NEW) {
       try {
         List<VisionText> currentLabels;
         currentLabels = await textDetector.detectFromPath(widget._file.path);
@@ -80,16 +80,21 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
         ),
         body: WidgetUtility.getStackWithProgressbar(getBody(), _showProgress));
   }
+
   Widget getBody() {
-    saveTFieldContrlr.text = _bcTitle;
+    saveTFieldController.text = _bcTitle;
     return Column(
       children: <Widget>[
         buildBody(),
         TextField(
-          controller: saveTFieldContrlr,
+          controller: saveTFieldController,
           decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Please enter a name to save the business card'),
+            labelText: "save",
+            hintText: 'Please enter a name to save the business card',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+          ),
         ),
         RaisedButton(
             onPressed: () => onSaveTapped(),
@@ -102,22 +107,22 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
   }
 
   void onSaveTapped() async {
-    if (bcTFieldContrlr.text == null || bcTFieldContrlr.text.isEmpty) {
+    if (bcTFieldController.text == null || bcTFieldController.text.isEmpty) {
       WidgetUtility.showFlutterToast("Nothing to save!");
       return;
     }
-    if (saveTFieldContrlr.text == null || saveTFieldContrlr.text.isEmpty) {
+    if (saveTFieldController.text == null || saveTFieldController.text.isEmpty) {
       WidgetUtility.showFlutterToast(
           "Enter valid name to save this Business card!!");
       return;
     }
-    _multilineBc = bcTFieldContrlr.text; // copy updated text in the text field
-    _bcTitle = saveTFieldContrlr.text; // copy updated text in the text field
+    _multilineBc = bcTFieldController.text; // copy updated text in the text field
+    _bcTitle = saveTFieldController.text; // copy updated text in the text field
     setState(() {
       _showProgress = true;
     });
     bool saveSuccessful = await AccBusinessCardDataHelper.saveBusinessCard(
-        saveTFieldContrlr.text, bcTFieldContrlr.text.split("\n"));
+        saveTFieldController.text, bcTFieldController.text.split("\n"));
     setState(() {
       _showProgress = false;
     });
@@ -136,17 +141,21 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
                 style: Theme.of(context).textTheme.subhead),
           ));
     }
-    bcTFieldContrlr.text = _multilineBc;
+    bcTFieldController.text = _multilineBc;
     return Expanded(
         flex: 1,
         child: Container(
-          child: TextField(
-              maxLines: 10,
-              controller: bcTFieldContrlr,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Business Card text goes here')),
-        ));
+            child: TextField(
+          maxLines: 10,
+          controller: bcTFieldController,
+          decoration: InputDecoration(
+            labelText: "Edit",
+            hintText: 'Business Card text goes here',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+          ),
+        )));
   }
 
   String visionTextToMultilineBC(List<VisionText> texts) {

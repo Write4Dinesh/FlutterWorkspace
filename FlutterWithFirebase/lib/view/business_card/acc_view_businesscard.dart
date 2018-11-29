@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
-import 'package:flutfire/view/business_card/acc_businesscard_scan_detail.dart';
+import 'package:flutfire/view/business_card/edit_business_card.dart';
 
 class AccViewBusinessCard extends StatefulWidget {
   final String _bCard;
@@ -23,6 +23,7 @@ class AccViewBusinessCard extends StatefulWidget {
 
 class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   List<String> bCardList;
+  bool _showProgressBar = false;
 
   AccViewBusinessCardState(this.bCardList);
 
@@ -30,52 +31,14 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget._key)),
-      body: Column(
-        children: <Widget>[buildDetailContainer(), buildButtonContainer()],
-      ),
+      body: WidgetUtility.getStackWithProgressbar(
+          Container(color: Colors.black12, child: getCard(context)),
+          _showProgressBar),
     );
-  }
-
-  Widget buildDetailContainer() {
-    return Expanded(
-        flex: 1,
-        child: Container(
-            child: ListView.builder(
-                itemBuilder: (context, i) => getListItem(bCardList[i]),
-                itemCount: bCardList.length)));
   }
 
   Widget getListItem(String text) {
     return ListTile(title: Text(text));
-  }
-
-  Widget buildButtonContainer() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        RaisedButton(
-          padding: EdgeInsets.only(left: 50.0, right: 50.0),
-          color: Colors.green,
-          textColor: Colors.white,
-          shape: WidgetUtility.getShape(5.0),
-          onPressed: () => goToNextScreen(context),
-          child: Text("Edit"),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 20.0, right: 20.0),
-        ),
-        RaisedButton(
-            padding: EdgeInsets.only(left: 50.0, right: 50.0),
-            color: Colors.green,
-            textColor: Colors.white,
-            shape: WidgetUtility.getShape(5.0),
-            onPressed: () =>
-                AccBusinessCardDataHelper.removeBusinessCardByKey(widget._key),
-            child: Text("Delete"))
-      ],
-    );
   }
 
   void goToNextScreen(BuildContext context) {
@@ -84,11 +47,70 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
       buffer.writeln(s);
     }
     MaterialPageRoute route = MaterialPageRoute(
-        builder: (context) => AccBusinessCardScanDetail(
+        builder: (context) => EditBusinessCard(
             null,
-            AccBusinessCardScanDetail.MODE_EDIT,
+            EditBusinessCard.MODE_EDIT,
             buffer.toString(),
             widget._key));
     Navigator.of(context).push(route);
+  }
+
+  Widget getCard(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final TextStyle titleStyle =
+        theme.textTheme.headline.copyWith(color: Colors.deepPurple);
+    final TextStyle descriptionStyle = theme.textTheme.subhead;
+    List<Widget> buttonBar = <Widget>[];
+    buttonBar.add(FlatButton(
+      child: const Text('Edit'),
+      onPressed: () {
+        goToNextScreen(context);
+      },
+    ));
+    buttonBar.add(FlatButton(
+      child: const Text('Delete'),
+      onPressed: () {
+        remove();
+      },
+    ));
+
+    return Card(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.add_circle),
+            title: Text(
+              widget._key,
+              style: titleStyle,
+            ),
+            subtitle: Text(widget._bCard, style: descriptionStyle),
+          ),
+          ButtonTheme.bar(
+            // make buttons use the appropriate styles for cards
+            child: ButtonBar(
+              children: buttonBar,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void remove() async {
+    bool removed = false;
+    setState(() {
+      _showProgressBar = true;
+    });
+    removed =
+        await AccBusinessCardDataHelper.removeBusinessCardByKey(widget._key);
+    setState(() {
+      _showProgressBar = false;
+    });
+    WidgetUtility.showFlutterToast(
+        removed ? "Deleted Successfully!!" : "Failed to Delete");
+    if (removed) {
+      Navigator.of(context).pop();
+    }
   }
 }
