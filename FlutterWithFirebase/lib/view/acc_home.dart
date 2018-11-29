@@ -2,11 +2,11 @@ import 'package:flutfire/mlkit/acc_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:flutfire/choosers/acc_choose_image_source.dart';
-import 'package:flutfire/utils/acc_app_constants.dart' as AppContstants;
-import 'package:flutfire/models/scanner_model.dart';
+import 'package:flutfire/view/acc_choose_image_source.dart';
+import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
+import 'package:flutfire/business_logic/models/scanner_model.dart';
 import 'package:flutfire/utils/widget_utility.dart';
-import 'package:flutfire/detail_screens/acc_show_businesscard_list.dart';
+import 'package:flutfire/view/business_card/acc_show_businesscard_list.dart';
 
 class AccHome extends StatefulWidget {
   AccHome({Key key}) : super(key: key);
@@ -21,7 +21,7 @@ class _AccHomeState extends State<AccHome> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String _selectedScanner = AppContstants.TEXT_SCANNER;
+  String _selectedScanner = AppConstants.TEXT_SCANNER;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _AccHomeState extends State<AccHome> {
         key: _scaffoldKey,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppContstants.APP_NAME),
+          title: Text(AppConstants.APP_NAME),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -98,17 +98,17 @@ class _AccHomeState extends State<AccHome> {
 
   Widget buildSelectScannerRowWidget(BuildContext context) {
     ScannerModel businessCardScannerModel = ScannerModel()
-      ..scannerType = AppContstants.TEXT_SCANNER
-      ..title = AppContstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE;
+      ..scannerType = AppConstants.TEXT_SCANNER
+      ..title = AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE;
     ScannerModel barcodeScannerModel = ScannerModel()
-      ..scannerType = AppContstants.BARCODE_SCANNER
-      ..title = AppContstants.BARCODE_SCANNER_SCREEN_TITLE;
+      ..scannerType = AppConstants.BARCODE_SCANNER
+      ..title = AppConstants.BARCODE_SCANNER_SCREEN_TITLE;
     ScannerModel labelScannerModel = ScannerModel()
-      ..scannerType = AppContstants.LABEL_SCANNER
-      ..title = AppContstants.LABEL_SCANNER_SCREEN_TITLE;
+      ..scannerType = AppConstants.LABEL_SCANNER
+      ..title = AppConstants.LABEL_SCANNER_SCREEN_TITLE;
     ScannerModel faceDetectionScannerModel = ScannerModel()
-      ..scannerType = AppContstants.FACE_SCANNER
-      ..title = AppContstants.FACE_DETECTION_SCANNER_SCREEN_TITLE;
+      ..scannerType = AppConstants.FACE_SCANNER
+      ..title = AppConstants.FACE_DETECTION_SCANNER_SCREEN_TITLE;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

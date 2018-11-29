@@ -1,12 +1,12 @@
-import 'package:flutfire/detail_screens/acc_businesscard_scan_detail.dart';
+import 'package:flutfire/view/business_card/acc_businesscard_scan_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
-import 'package:flutfire/models/scanner_model.dart';
-import 'package:flutfire/detail_screens/acc_barcode_scan_detail.dart';
-import 'package:flutfire/detail_screens/acc_face_scan_detail.dart';
-import 'package:flutfire/detail_screens/acc_label_scan_detail.dart';
+import 'package:flutfire/business_logic/models/scanner_model.dart';
+import 'package:flutfire/view/acc_barcode_scan_detail.dart';
+import 'package:flutfire/view/acc_face_scan_detail.dart';
+import 'package:flutfire/view/acc_label_scan_detail.dart';
 import 'package:flutfire/utils/widget_utility.dart';
 
 const String PICK_IMAGE_LABEL_CAMERA = 'Camera';

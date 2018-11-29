@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:flutfire/acc_home.dart';
+import 'package:flutfire/view/acc_home.dart';
 import 'dart:async';
 import 'utils/acc_app_constants.dart' as AppConstants;
 

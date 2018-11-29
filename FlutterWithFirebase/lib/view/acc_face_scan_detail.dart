@@ -1,14 +1,14 @@
-import 'package:flutfire/choosers/acc_choose_image_source.dart';
+import 'package:flutfire/view/acc_choose_image_source.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 
-class AccSmileDetector extends StatefulWidget {
+class AccFaceScanDetail extends StatefulWidget {
   final File _file;
 
-  AccSmileDetector(this._file);
+  AccFaceScanDetail(this._file);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,11 +16,11 @@ class AccSmileDetector extends StatefulWidget {
   }
 }
 
-class _AccScanDetailState extends State<AccSmileDetector> {
-  FirebaseVisionLabelDetector labelDetector =
-      FirebaseVisionLabelDetector.instance;
+class _AccScanDetailState extends State<AccFaceScanDetail> {
+  FirebaseVisionFaceDetector faceDetector = FirebaseVisionFaceDetector.instance;
 
-  List<VisionLabel> _currentLabelLabels = <VisionLabel>[];
+  List<VisionFace> _currentFaceLabels = <VisionFace>[];
+
   Stream sub;
   StreamSubscription<dynamic> subscription;
 
@@ -35,10 +35,10 @@ class _AccScanDetailState extends State<AccSmileDetector> {
     try {
       var currentLabels;
 
-      currentLabels = await labelDetector.detectFromPath(widget._file.path);
+      currentLabels = await faceDetector.detectFromPath(widget._file.path);
       if (this.mounted) {
         setState(() {
-          _currentLabelLabels = currentLabels;
+          _currentFaceLabels = currentLabels;
         });
       }
     } catch (e) {
@@ -58,12 +58,12 @@ class _AccScanDetailState extends State<AccSmileDetector> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.LABEL_SCANNER_SCREEN_TITLE),
+          title: Text(AppConstants.FACE_DETECTION_SCANNER_SCREEN_TITLE),
         ),
         body: Column(
           children: <Widget>[
-//            buildImage(context),//uncomment this line to make image visible
-            buildSmileStatusWidget<VisionLabel>()
+            buildImage(context),
+            buildBarcodeList<VisionFace>(_currentFaceLabels),
           ],
         ));
   }
@@ -83,8 +83,8 @@ class _AccScanDetailState extends State<AccSmileDetector> {
                         (BuildContext context, AsyncSnapshot<Size> snapshot) {
                       if (snapshot.hasData) {
                         return Container(
-                            foregroundDecoration: LabelDetectDecoration(
-                                _currentLabelLabels, snapshot.data),
+                            foregroundDecoration: FaceDetectDecoration(
+                                _currentFaceLabels, snapshot.data),
                             child:
                                 Image.file(widget._file, fit: BoxFit.fitWidth));
                       } else {
@@ -96,27 +96,8 @@ class _AccScanDetailState extends State<AccSmileDetector> {
     );
   }
 
-  bool isSmiling() {
-    if (nothingDetected()) {
-      return false;
-    }
-    String label;
-    for (int i = 0; i < _currentLabelLabels.length; i++) {
-      label = _currentLabelLabels[i].label;
-      if (label == "Smile") {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  bool nothingDetected() {
-    return _currentLabelLabels.length == 0;
-  }
-
-  Widget buildSmileStatusWidget<T>() {
-    //Error case
-    if (nothingDetected()) {
+  Widget buildBarcodeList<T>(List<T> barcodes) {
+    if (barcodes.length == 0) {
       return Expanded(
         flex: 1,
         child: Center(
@@ -128,7 +109,19 @@ class _AccScanDetailState extends State<AccSmileDetector> {
     return Expanded(
       flex: 1,
       child: Container(
-        child: Text('Smiling:${isSmiling()}'),
+        child: ListView.builder(
+            padding: const EdgeInsets.all(1.0),
+            itemCount: barcodes.length,
+            itemBuilder: (context, i) {
+              var text;
+
+              final barcode = barcodes[i];
+
+              VisionFace res = barcode as VisionFace;
+              text = "Raw Value: ${res.smilingProbability},${res.trackingID},${res.getLandmark(FaceLandmarkType.RightEar)}";
+
+              return _buildTextRow(text);
+            }),
       ),
     );
   }
@@ -173,26 +166,26 @@ class _AccScanDetailState extends State<AccSmileDetector> {
   }
 }
 
-class LabelDetectDecoration extends Decoration {
+class FaceDetectDecoration extends Decoration {
   final Size _originalImageSize;
-  final List<VisionLabel> _labels;
+  final List<VisionFace> _faces;
 
-  LabelDetectDecoration(List<VisionLabel> labels, Size originalImageSize)
-      : _labels = labels,
+  FaceDetectDecoration(List<VisionFace> faces, Size originalImageSize)
+      : _faces = faces,
         _originalImageSize = originalImageSize;
 
   @override
   BoxPainter createBoxPainter([VoidCallback onChanged]) {
-    return _LabelDetectPainter(_labels, _originalImageSize);
+    return _FaceDetectPainter(_faces, _originalImageSize);
   }
 }
 
-class _LabelDetectPainter extends BoxPainter {
-  final List<VisionLabel> _labels;
+class _FaceDetectPainter extends BoxPainter {
+  final List<VisionFace> _faces;
   final Size _originalImageSize;
 
-  _LabelDetectPainter(labels, originalImageSize)
-      : _labels = labels,
+  _FaceDetectPainter(faces, originalImageSize)
+      : _faces = faces,
         _originalImageSize = originalImageSize;
 
   @override
@@ -204,12 +197,12 @@ class _LabelDetectPainter extends BoxPainter {
 
     final _heightRatio = _originalImageSize.height / configuration.size.height;
     final _widthRatio = _originalImageSize.width / configuration.size.width;
-    for (var label in _labels) {
+    for (var face in _faces) {
       final _rect = Rect.fromLTRB(
-          offset.dx + label.rect.left / _widthRatio,
-          offset.dy + label.rect.top / _heightRatio,
-          offset.dx + label.rect.right / _widthRatio,
-          offset.dy + label.rect.bottom / _heightRatio);
+          offset.dx + face.rect.left / _widthRatio,
+          offset.dy + face.rect.top / _heightRatio,
+          offset.dx + face.rect.right / _widthRatio,
+          offset.dy + face.rect.bottom / _heightRatio);
       canvas.drawRect(_rect, paint);
     }
     canvas.restore();

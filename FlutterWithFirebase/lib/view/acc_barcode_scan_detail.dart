@@ -1,4 +1,4 @@
-import 'package:flutfire/choosers/acc_choose_image_source.dart';
+import 'package:flutfire/view/acc_choose_image_source.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';

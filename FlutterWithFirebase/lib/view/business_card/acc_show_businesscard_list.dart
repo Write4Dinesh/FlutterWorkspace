@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/utils/widget_utility.dart';
-import 'package:flutfire/detail_screens/acc_view_businesscard.dart';
-import 'package:flutfire/data/acc_businesscard_data_helper.dart';
+import 'package:flutfire/view/business_card/acc_view_businesscard.dart';
+import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 
 class AccShowBusinessCardList extends StatefulWidget {
   AccShowBusinessCardList();

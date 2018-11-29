@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/utils/widget_utility.dart';
-import 'package:flutfire/data/acc_businesscard_data_helper.dart';
+import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 
 class AccBusinessCardScanDetail extends StatefulWidget {
   static final int MODE_EDIT = 1;
@@ -80,7 +80,6 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
         ),
         body: WidgetUtility.getStackWithProgressbar(getBody(), _showProgress));
   }
-
   Widget getBody() {
     saveTFieldContrlr.text = _bcTitle;
     return Column(

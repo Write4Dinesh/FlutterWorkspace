@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
-import 'package:flutfire/data/acc_businesscard_data_helper.dart';
-import 'package:flutfire/detail_screens/acc_businesscard_scan_detail.dart';
+import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
+import 'package:flutfire/view/business_card/acc_businesscard_scan_detail.dart';
 
 class AccViewBusinessCard extends StatefulWidget {
   final String _bCard;
