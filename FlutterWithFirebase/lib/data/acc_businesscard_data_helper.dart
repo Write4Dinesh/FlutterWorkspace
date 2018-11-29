@@ -22,17 +22,21 @@ class AccBusinessCardDataHelper {
       }
 
       //save business card
-      await AccDataStore.instance.saveStringByKey(cardKey, bCard);
+     bool bcSaveSuccessful =  await AccDataStore.instance.saveStringByKey(cardKey, bCard);
 
       //Save the cardKey separately
-      String keyList = await AccDataStore.instance
-          .loadStringByKey(AppConstants.LIST_OF_KEYS);
-      keyList = keyList == null || keyList.isEmpty
-          ? cardKey
-          : keyList + AppConstants.KeySeparator + cardKey;
-      await AccDataStore.instance
-          .saveStringByKey(AppConstants.LIST_OF_KEYS, keyList);
+      if(bcSaveSuccessful) {
+        String keyList = await AccDataStore.instance
+            .loadStringByKey(AppConstants.LIST_OF_KEYS);
+        keyList = keyList == null || keyList.isEmpty
+            ? cardKey
+            : keyList + AppConstants.KeySeparator + cardKey;
+       bool keyListUpdated =  await AccDataStore.instance
+            .saveStringByKey(AppConstants.LIST_OF_KEYS, keyList);
+       return keyListUpdated;
+      }
     }
+    return false;
   }
 
   static loadAllKeys() async {

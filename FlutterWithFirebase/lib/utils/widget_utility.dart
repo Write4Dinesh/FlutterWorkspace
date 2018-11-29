@@ -25,4 +25,13 @@ class WidgetUtility {
         bgcolor: Colors.green.toString(),
         textcolor: Colors.white.toString());
   }
+
+  static Stack getStackWithProgressbar(Widget body, bool toBeShownProgressbar) {
+    List<Widget> children = <Widget>[];
+    children.add(body);
+    if (toBeShownProgressbar) {
+      children.add(CircularProgressIndicator());
+    }
+    return Stack(alignment: AlignmentDirectional.center, children: children);
+  }
 }

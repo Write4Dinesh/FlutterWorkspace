@@ -3,14 +3,18 @@ import 'dart:io';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/data/acc_businesscard_data_helper.dart';
 
 class AccBusinessCardScanDetail extends StatefulWidget {
+  static final int MODE_EDIT = 1;
+  static final int MODE_SCAN_NEW = 2;
   final File _file;
+  int _mode;
+  String _bcString;
+  String _key;
 
-  AccBusinessCardScanDetail(this._file);
+  AccBusinessCardScanDetail(this._file, this._mode, this._bcString, this._key);
 
   @override
   State<StatefulWidget> createState() {
@@ -19,10 +23,15 @@ class AccBusinessCardScanDetail extends StatefulWidget {
 }
 
 class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
-  final myController = TextEditingController();
+  static const String LABEL_SAVE = "Save";
+  final saveTFieldContrlr = TextEditingController();
+  final bcTFieldContrlr = TextEditingController();
+
   FirebaseVisionTextDetector textDetector = FirebaseVisionTextDetector.instance;
 
-  List<VisionText> _currentTextLabels = <VisionText>[];
+  bool _showProgress = false;
+  String _multilineBc = "";
+  String _bcTitle = "";
 
   Stream sub;
   StreamSubscription<dynamic> subscription;
@@ -35,16 +44,23 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
   }
 
   void analyzeLabels() async {
-    try {
-      var currentLabels;
-      currentLabels = await textDetector.detectFromPath(widget._file.path);
-      if (this.mounted) {
-        setState(() {
-          _currentTextLabels = currentLabels;
-        });
+    if (widget._mode == AccBusinessCardScanDetail.MODE_SCAN_NEW) {
+      try {
+        List<VisionText> currentLabels;
+        currentLabels = await textDetector.detectFromPath(widget._file.path);
+        if (this.mounted) {
+          setState(() {
+            _multilineBc = visionTextToMultilineBC(currentLabels);
+          });
+        }
+      } catch (e) {
+        print("MyEx: " + e.toString());
       }
-    } catch (e) {
-      print("MyEx: " + e.toString());
+    } else {
+      setState(() {
+        _multilineBc = widget._bcString;
+        _bcTitle = widget._key;
+      });
     }
   }
 
@@ -62,28 +78,58 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
           centerTitle: true,
           title: Text(AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE),
         ),
-        body: Column(
-          children: <Widget>[
-            buildTextList(_currentTextLabels),
-            TextField(
-              controller: myController,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Please enter a name to save the business card'),
-            ),
-            RaisedButton(
-                onPressed: () => AccBusinessCardDataHelper.saveBusinessCard(
-                    myController.text, getStringArray()),
-                color: Colors.green,
-                textColor: Colors.white,
-                shape: WidgetUtility.getShape(5.0),
-                child: new Text("Save"))
-          ],
-        ));
+        body: WidgetUtility.getStackWithProgressbar(getBody(), _showProgress));
   }
 
-  Widget buildTextList(List<VisionText> texts) {
-    if (texts.length == 0) {
+  Widget getBody() {
+    saveTFieldContrlr.text = _bcTitle;
+    return Column(
+      children: <Widget>[
+        buildBody(),
+        TextField(
+          controller: saveTFieldContrlr,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Please enter a name to save the business card'),
+        ),
+        RaisedButton(
+            onPressed: () => onSaveTapped(),
+            color: Colors.green,
+            textColor: Colors.white,
+            shape: WidgetUtility.getShape(5.0),
+            child: new Text(LABEL_SAVE))
+      ],
+    );
+  }
+
+  void onSaveTapped() async {
+    if (bcTFieldContrlr.text == null || bcTFieldContrlr.text.isEmpty) {
+      WidgetUtility.showFlutterToast("Nothing to save!");
+      return;
+    }
+    if (saveTFieldContrlr.text == null || saveTFieldContrlr.text.isEmpty) {
+      WidgetUtility.showFlutterToast(
+          "Enter valid name to save this Business card!!");
+      return;
+    }
+    _multilineBc = bcTFieldContrlr.text; // copy updated text in the text field
+    _bcTitle = saveTFieldContrlr.text; // copy updated text in the text field
+    setState(() {
+      _showProgress = true;
+    });
+    bool saveSuccessful = await AccBusinessCardDataHelper.saveBusinessCard(
+        saveTFieldContrlr.text, bcTFieldContrlr.text.split("\n"));
+    setState(() {
+      _showProgress = false;
+    });
+    String statusMessage =
+        saveSuccessful ? "Save successful" : "Save failed. Try later!!";
+    WidgetUtility.showFlutterToast(statusMessage);
+    Navigator.of(context).pop();
+  }
+
+  Widget buildBody() {
+    if (_multilineBc.isEmpty) {
       return Expanded(
           flex: 1,
           child: Center(
@@ -91,33 +137,27 @@ class _AccScanDetailState extends State<AccBusinessCardScanDetail> {
                 style: Theme.of(context).textTheme.subhead),
           ));
     }
+    bcTFieldContrlr.text = _multilineBc;
     return Expanded(
         flex: 1,
         child: Container(
-          child: ListView.builder(
-              padding: const EdgeInsets.all(1.0),
-              itemCount: texts.length,
-              itemBuilder: (context, i) {
-                return _buildTextRow(texts[i].text);
-              }),
+          child: TextField(
+              maxLines: 10,
+              controller: bcTFieldContrlr,
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Business Card text goes here')),
         ));
   }
 
-  Widget _buildTextRow(text) {
-    return ListTile(
-      title: Text(
-        "$text",
-      ),
-      dense: true,
-    );
-  }
+  String visionTextToMultilineBC(List<VisionText> texts) {
+    StringBuffer multiline = StringBuffer();
+    for (int i = 0; i < texts.length; i++) {
+      multiline.write(texts[i].text);
 
-  getStringArray() {
-    List<String> arr = <String>[];
-    for (int i = 0; i < _currentTextLabels.length; i++) {
-      arr.add(_currentTextLabels[i].text);
+      if (i != (texts.length - 1)) multiline.write("\n");
     }
-    return arr;
+    return multiline.toString();
   }
 
   Future<Size> _getImageSize(Image image) {

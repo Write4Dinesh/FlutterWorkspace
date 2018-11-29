@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/data/acc_businesscard_data_helper.dart';
+import 'package:flutfire/detail_screens/acc_businesscard_scan_detail.dart';
 
 class AccViewBusinessCard extends StatefulWidget {
   final String _bCard;
@@ -11,7 +12,7 @@ class AccViewBusinessCard extends StatefulWidget {
 
   @override
   State createState() {
-    return AccViewBusinessCardState(getList(), _key);
+    return AccViewBusinessCardState(getList());
   }
 
   List<String> getList() {
@@ -22,14 +23,13 @@ class AccViewBusinessCard extends StatefulWidget {
 
 class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   List<String> bCardList;
-  final String key;
 
-  AccViewBusinessCardState(this.bCardList, this.key);
+  AccViewBusinessCardState(this.bCardList);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Details")),
+      appBar: AppBar(title: Text(widget._key)),
       body: Column(
         children: <Widget>[buildDetailContainer(), buildButtonContainer()],
       ),
@@ -60,7 +60,7 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
           color: Colors.green,
           textColor: Colors.white,
           shape: WidgetUtility.getShape(5.0),
-          onPressed: () => WidgetUtility.showFlutterToast("Edit pressed"),
+          onPressed: () => goToNextScreen(context),
           child: Text("Edit"),
         ),
         Padding(
@@ -72,9 +72,23 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
             textColor: Colors.white,
             shape: WidgetUtility.getShape(5.0),
             onPressed: () =>
-                AccBusinessCardDataHelper.removeBusinessCardByKey(key),
+                AccBusinessCardDataHelper.removeBusinessCardByKey(widget._key),
             child: Text("Delete"))
       ],
     );
+  }
+
+  void goToNextScreen(BuildContext context) {
+    StringBuffer buffer = StringBuffer();
+    for (String s in bCardList) {
+      buffer.writeln(s);
+    }
+    MaterialPageRoute route = MaterialPageRoute(
+        builder: (context) => AccBusinessCardScanDetail(
+            null,
+            AccBusinessCardScanDetail.MODE_EDIT,
+            buffer.toString(),
+            widget._key));
+    Navigator.of(context).push(route);
   }
 }
