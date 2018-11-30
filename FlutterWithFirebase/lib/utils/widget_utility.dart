@@ -46,4 +46,20 @@ class WidgetUtility {
   static Color getGlobalScreenBgColor() {
     return Colors.black12;
   }
+
+  static TextStyle getTitleStyle(BuildContext context) {
+    return Theme.of(context)
+        .textTheme
+        .headline
+        .copyWith(color: Colors.deepPurple);
+  }
+
+  static TextStyle getSubTitleStyle(BuildContext context) {
+    return Theme.of(context).textTheme.subhead;
+  }
+
+  static TextStyle getButtonLabelStyle(BuildContext context) {
+    return Theme.of(context).textTheme.title.copyWith(
+        color: Colors.green, fontSize: 15, fontWeight: FontWeight.bold);
+  }
 }

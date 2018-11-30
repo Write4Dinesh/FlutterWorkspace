@@ -50,19 +50,15 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   }
 
   Widget getCard(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final TextStyle titleStyle =
-        theme.textTheme.headline.copyWith(color: Colors.deepPurple);
-    final TextStyle descriptionStyle = theme.textTheme.subhead;
     List<Widget> buttonBar = <Widget>[];
     buttonBar.add(FlatButton(
-      child: const Text('Edit'),
+      child:  Text('EDIT',style: WidgetUtility.getButtonLabelStyle(context)),
       onPressed: () {
         goToNextScreen(context);
       },
     ));
     buttonBar.add(FlatButton(
-      child: const Text('Delete'),
+      child:  Text('DELETE',style: WidgetUtility.getButtonLabelStyle(context)),
       onPressed: () {
         remove();
       },
@@ -76,9 +72,9 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
             /*leading: Icon(Icons.add_circle),*/
             title: Text(
               widget._key,
-              style: titleStyle,
+              style: WidgetUtility.getTitleStyle(context),
             ),
-            subtitle: Text(widget._bCard, style: descriptionStyle),
+            subtitle: Text(widget._bCard, style: WidgetUtility.getSubTitleStyle(context)),
           ),
           ButtonTheme.bar(
             // make buttons use the appropriate styles for cards

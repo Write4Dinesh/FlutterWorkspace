@@ -98,11 +98,11 @@ class _AccHomeState extends State<AccHome> {
       ..tileDescription = "Scan business card, edit & save."
       ..screenTitle = AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE;
 
-    ScannerModel businessCardListModel = ScannerModel()
+   /* ScannerModel businessCardListModel = ScannerModel()
       ..scannerType = AppConstants.TEXT_SCANNER_LIST
       ..tileTitle = "same as above"
       ..tileDescription = "same as above"
-      ..screenTitle = AppConstants.BUSINESS_CARD_LIST_SCREEN_TITLE;
+      ..screenTitle = AppConstants.BUSINESS_CARD_LIST_SCREEN_TITLE;*/
 
     ScannerModel barcodeScannerModel = ScannerModel()
       ..scannerType = AppConstants.BARCODE_SCANNER
@@ -131,7 +131,7 @@ class _AccHomeState extends State<AccHome> {
         getCard(context, barcodeScannerModel),
         getCard(context, labelScannerModel),
         getCard(context, faceDetectionScannerModel),
-        getCard(context, businessCardListModel)
+        //getCard(context, businessCardListModel)
       ],
     );
   }
@@ -182,17 +182,17 @@ class _AccHomeState extends State<AccHome> {
   Future<bool> _onWillPop() {
     return showDialog(
           context: context,
-          builder: (context) => new AlertDialog(
-                title: new Text('Are you sure?'),
-                content: new Text('Do you want to exit the App'),
+          builder: (context) =>  AlertDialog(
+                title:  Text('Exit app',style:WidgetUtility.getTitleStyle(context)),
+                content:  Text('Do you want to exit the App?',style: WidgetUtility.getSubTitleStyle(context),),
                 actions: <Widget>[
-                  new FlatButton(
+                   FlatButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: new Text('No'),
+                    child:  Text('No',style: WidgetUtility.getButtonLabelStyle(context)),
                   ),
-                  new FlatButton(
+                   FlatButton(
                     onPressed: () => exit(0),
-                    child: new Text('Yes'),
+                    child:  Text('Yes',style: WidgetUtility.getButtonLabelStyle(context)),
                   ),
                 ],
               ),
@@ -201,20 +201,18 @@ class _AccHomeState extends State<AccHome> {
   }
 
   Widget getCard(BuildContext context, ScannerModel model) {
-    final ThemeData theme = Theme.of(context);
-    final TextStyle titleStyle =
-        theme.textTheme.headline.copyWith(color: Colors.deepPurple);
-    final TextStyle descriptionStyle = theme.textTheme.subhead;
     List<Widget> buttonBar = <Widget>[];
     buttonBar.add(FlatButton(
-      child: const Text('SCAN NEW'),
+      child:
+          Text('SCAN NEW', style: WidgetUtility.getButtonLabelStyle(context)),
       onPressed: () {
         goToNextScreen(model);
       },
     ));
     if (model.type == AppConstants.TEXT_SCANNER) {
       buttonBar.add(FlatButton(
-        child: const Text('VIEW SAVED'),
+        child: Text('VIEW SAVED',
+            style: WidgetUtility.getButtonLabelStyle(context)),
         onPressed: () {
           final MaterialPageRoute chooseImageSourcePage = MaterialPageRoute(
               builder: (context) => AccShowBusinessCardList());
@@ -227,12 +225,12 @@ class _AccHomeState extends State<AccHome> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.add_circle),
             title: Text(
               model.tileTitle,
-              style: titleStyle,
+              style: WidgetUtility.getTitleStyle(context),
             ),
-            subtitle: Text(model.tileDescription, style: descriptionStyle),
+            subtitle: Text(model.tileDescription,
+                style: WidgetUtility.getSubTitleStyle(context)),
           ),
           ButtonTheme.bar(
             // make buttons use the appropriate styles for cards

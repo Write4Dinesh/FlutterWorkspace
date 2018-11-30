@@ -57,16 +57,17 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
           title: Text("Saved Business Card List"),
         ),
         body: Container(
-        color: WidgetUtility.getGlobalScreenBgColor(),child:WidgetUtility.buildPadding(
-            Column(
-              children: <Widget>[
-                buildTextList(_allKeys),
-              ],
-            ),
-            AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
-            AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
-            10,
-            0)));
+            color: WidgetUtility.getGlobalScreenBgColor(),
+            child: WidgetUtility.buildPadding(
+                Column(
+                  children: <Widget>[
+                    buildTextList(_allKeys),
+                  ],
+                ),
+                AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+                AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+                10,
+                0)));
   }
 
   Widget buildTextList(List<String> texts) {
@@ -79,14 +80,13 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
           ));
     }
     return Expanded(
-        flex: 1,
-
-          child: ListView.builder(
-              itemCount: texts.length,
-              itemBuilder: (context, i) {
-                return getCardItem(texts[i]);
-              }),
-        );
+      flex: 1,
+      child: ListView.builder(
+          itemCount: texts.length,
+          itemBuilder: (context, i) {
+            return getCardItem(texts[i]);
+          }),
+    );
   }
 
   goToNextScreen(String text) async {
@@ -103,14 +103,6 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
       arr.add(_allKeys[i]);
     }
     return arr;
-  }
-
-  Future<Size> _getImageSize(Image image) {
-    Completer<Size> completer = Completer<Size>();
-    image.image.resolve(ImageConfiguration()).addListener(
-        (ImageInfo info, bool _) => completer.complete(
-            Size(info.image.width.toDouble(), info.image.height.toDouble())));
-    return completer.future;
   }
 
 //only called when we move this screen to background..not when navigated to next screen.
@@ -131,10 +123,7 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
               trailing: Icon(Icons.arrow_right),
               title: Text(title,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.deepPurpleAccent)),
+                  style: WidgetUtility.getTitleStyle(context)),
               onTap: () => goToNextScreen(title)),
         ],
       ),

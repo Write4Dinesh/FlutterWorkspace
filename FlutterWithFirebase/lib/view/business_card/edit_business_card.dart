@@ -23,8 +23,8 @@ class EditBusinessCard extends StatefulWidget {
 }
 
 class _AccScanDetailState extends State<EditBusinessCard> {
-  static const String LABEL_SAVE = "Save";
-  static const String LABEL_UPDATE = "Update";
+  static const String LABEL_SAVE = "SAVE";
+  static const String LABEL_UPDATE = "UPDATE";
   final saveTFieldController = TextEditingController();
   final bcTFieldController = TextEditingController();
 

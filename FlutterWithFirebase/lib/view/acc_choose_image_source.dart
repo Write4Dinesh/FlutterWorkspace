@@ -44,19 +44,22 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
           title: Text(widget.scannerModel.screenTitle),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              buildTitleWidget(context, widget.title),
-              buildRaisedButton(
-                  context, PICK_IMAGE_LABEL_CAMERA, CAMERA_SOURCE),
-              buildRaisedButton(
-                  context, PICK_IMAGE_LABEL_GALLERY, GALLERY_SOURCE)
-            ],
-          ),
-        ));
+            child: Container(
+                color: WidgetUtility.getGlobalScreenBgColor(),
+                child: WidgetUtility.buildPadding(
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        getCard(
+                            context, PICK_IMAGE_LABEL_CAMERA, CAMERA_SOURCE),
+                      ],
+                    ),
+                    AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+                    AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+                    10,
+                    1))));
   }
 
   Widget buildTitleWidget(BuildContext context, String title) {
@@ -68,21 +71,6 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
         style: Theme.of(context).textTheme.headline,
       ),
     ));
-  }
-
-  /* ++++++++++++++++++++++ build Raised Buttons to pick image form either Gallery or Camera +++++++++++++++++++ */
-  Widget buildRaisedButton(
-      BuildContext context, String label, String scanType) {
-    return RaisedButton(
-        padding: EdgeInsets.only(left: 50.0, right: 50.0),
-        color: Colors.green,
-        textColor: Colors.white,
-        splashColor: Colors.blueGrey,
-        onPressed: () {
-          onPickImageSelected(scanType);
-        },
-        shape: WidgetUtility.getShape(5.0),
-        child: Text(label));
   }
 
   /* ++++++++++++++ pick an image from either gallery or camera ++++++++++++++ */
@@ -110,7 +98,7 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
     switch (this.scannerModel.type) {
       case AppConstants.TEXT_SCANNER:
         detailObj = EditBusinessCard(
-            pickedImageFile, EditBusinessCard.MODE_SCAN_NEW, null,null);
+            pickedImageFile, EditBusinessCard.MODE_SCAN_NEW, null, null);
 
         break;
       case AppConstants.BARCODE_SCANNER:
@@ -128,5 +116,33 @@ class _ACCChooseImageSourceState extends State<ACCChooseImageSource> {
     }
     Navigator.push(
         context, new MaterialPageRoute(builder: (context) => detailObj));
+  }
+
+  Widget getCard(BuildContext context, String label, String scanType) {
+    return Card(
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      ListTile(
+          title: Text("Pick an image from the source",
+              style: WidgetUtility.getTitleStyle(context)),
+          subtitle: Text(
+            "Choose camera to take a picture.\nChoose gallery to pick an existing image.",
+            style: WidgetUtility.getSubTitleStyle(context),
+          )),
+      ButtonTheme.bar(
+          child: ButtonBar(children: <Widget>[
+        FlatButton(
+          child: Text("CAMERA",style: WidgetUtility.getButtonLabelStyle(context)),
+          onPressed: () {
+            onPickImageSelected(CAMERA_SOURCE);
+          },
+        ),
+        FlatButton(
+          child: Text("GALLERY",style: WidgetUtility.getButtonLabelStyle(context)),
+          onPressed: () {
+            onPickImageSelected(GALLERY_SOURCE);
+          },
+        )
+      ]))
+    ]));
   }
 }

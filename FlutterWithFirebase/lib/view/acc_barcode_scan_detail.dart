@@ -69,33 +69,15 @@ class _AccScanDetailState extends State<AccBarcodeScanDetail> {
           centerTitle: true,
           title: Text(AppConstants.BARCODE_SCANNER_SCREEN_TITLE),
         ),
-        body: Container(
-          child: buildBody<VisionBarcode>(_currentBarcodeLabels, context),
-        ));
-  }
-
-  Widget buildBody<T>(List<T> barcodes, BuildContext context) {
-    if (barcodes.length == 0) {
-      return Center(
-        child: Text('Nothing detected',
-            style: Theme.of(context).textTheme.subhead),
-      );
-    }
-    final barcode = barcodes[0];
-    VisionBarcode res = barcode as VisionBarcode;
-    _scannedBarcode = res.rawValue;
-    return Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
-      Center(
-        child: new Text('The Scanned Barcode:$_scannedBarcode',
-            style: Theme.of(context).textTheme.subhead),
-      ),
-      RaisedButton(
-          onPressed: () => onPressed(context, _scannedBarcode),
-          color: Colors.green,
-          textColor: Colors.white,
-          shape: WidgetUtility.getShape(5.0),
-          child: Text('Searc web'))
-    ]);
+        body: WidgetUtility.buildPadding(
+            Container(
+              color: WidgetUtility.getGlobalScreenBgColor(),
+              child: getCard<VisionBarcode>(_currentBarcodeLabels, context),
+            ),
+            AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+            AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+            10,
+            1));
   }
 
   void onPressed(BuildContext context, String searchQuery) async {
@@ -113,5 +95,37 @@ class _AccScanDetailState extends State<AccBarcodeScanDetail> {
         (ImageInfo info, bool _) => completer.complete(
             Size(info.image.width.toDouble(), info.image.height.toDouble())));
     return completer.future;
+  }
+
+  Widget getCard<T>(List<T> barcodes, BuildContext context) {
+    if (barcodes.length == 0) {
+      return Center(
+        child: Text('Nothing detected',
+            style: Theme.of(context).textTheme.subhead),
+      );
+    }
+
+    final barcode = barcodes[0];
+    VisionBarcode res = barcode as VisionBarcode;
+    _scannedBarcode = res.rawValue;
+    return Card(
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      ListTile(
+          title: Text("The Scanned barcode",
+              style: WidgetUtility.getTitleStyle(context)),
+          subtitle: Text(
+            _scannedBarcode,
+            style: WidgetUtility.getSubTitleStyle(context),
+          )),
+      ButtonTheme.bar(
+          child: ButtonBar(children: <Widget>[
+        FlatButton(
+          child: Text("Search web",style: WidgetUtility.getButtonLabelStyle(context)),
+          onPressed: () {
+            onPressed(context, _scannedBarcode);
+          },
+        )
+      ]))
+    ]));
   }
 }
