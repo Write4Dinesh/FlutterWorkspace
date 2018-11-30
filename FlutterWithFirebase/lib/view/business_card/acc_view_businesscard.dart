@@ -26,7 +26,14 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
     return Scaffold(
       appBar: AppBar(title: Text(widget._key)),
       body: WidgetUtility.getStackWithProgressbar(
-          Container(color: Colors.black12, child: getCard(context)),
+          Container(
+              color: WidgetUtility.getGlobalScreenBgColor(),
+              child: WidgetUtility.buildPadding(
+                  getCard(context),
+                  AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+                  AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+                  5,
+                  5)),
           _showProgressBar),
     );
   }
@@ -66,7 +73,7 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.add_circle),
+            /*leading: Icon(Icons.add_circle),*/
             title: Text(
               widget._key,
               style: titleStyle,

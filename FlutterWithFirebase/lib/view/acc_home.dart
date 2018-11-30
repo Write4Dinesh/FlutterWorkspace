@@ -7,6 +7,7 @@ import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/business_logic/models/scanner_model.dart';
 import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/view/business_card/acc_show_businesscard_list.dart';
+import 'package:flutfire/utils/widget_utility.dart';
 
 class AccHome extends StatefulWidget {
   AccHome({Key key}) : super(key: key);
@@ -37,14 +38,20 @@ class _AccHomeState extends State<AccHome> {
           centerTitle: true,
           title: Text(AppConstants.APP_NAME),
         ),
-        body: Container(color:Colors.black12 ,child:SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: columns,
-          )
-        )));
+        body: Container(
+            color: WidgetUtility.getGlobalScreenBgColor(),
+            child: SingleChildScrollView(
+                child: WidgetUtility.buildPadding(
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: columns,
+                    ),
+                    AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+                    AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+                    10,
+                    10))));
 
     var willPopScope = WillPopScope(onWillPop: _onWillPop, child: homeScaffold);
 

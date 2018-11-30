@@ -34,4 +34,16 @@ class WidgetUtility {
     }
     return Stack(alignment: AlignmentDirectional.center, children: children);
   }
+
+  static Widget buildPadding(Widget childWidget, double left, double right,
+      double top, double bottom) {
+    return Padding(
+        padding:
+            EdgeInsets.only(left: left, right: right, top: top, bottom: bottom),
+        child: childWidget);
+  }
+
+  static Color getGlobalScreenBgColor() {
+    return Colors.black12;
+  }
 }

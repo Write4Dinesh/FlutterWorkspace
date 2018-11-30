@@ -78,30 +78,29 @@ class _AccScanDetailState extends State<EditBusinessCard> {
         appBar: AppBar(
           centerTitle: true,
           title: new Text((widget._mode == EditBusinessCard.MODE_EDIT
-              ? LABEL_UPDATE
-              : LABEL_SAVE) + " Business Card"),
+                  ? LABEL_UPDATE
+                  : LABEL_SAVE) +
+              " Business Card"),
         ),
         body: WidgetUtility.getStackWithProgressbar(
-            buildPadding(buildBodyContainer(), 15, 15, 5, 5), _showProgress));
+            Container(color:WidgetUtility.getGlobalScreenBgColor(),child:WidgetUtility.buildPadding(
+                buildBodyContainer(),
+                AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+                AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+                5,
+                5)),
+            _showProgress));
   }
 
   Widget buildBodyContainer() {
     saveTFieldController.text = _bcTitle;
     return Column(
       children: <Widget>[
-        buildPadding(buildSaveTextField(), 0, 0, 15, 15),
+        WidgetUtility.buildPadding(buildSaveTextField(), 0, 0, 15, 15),
         buildBody(),
         buildSaveButton()
       ],
     );
-  }
-
-  Widget buildPadding(Widget childWidget, double left, double right, double top,
-      double bottom) {
-    return Padding(
-        padding:
-            EdgeInsets.only(left: left, right: right, top: top, bottom: bottom),
-        child: childWidget);
   }
 
   Widget buildSaveButton() {

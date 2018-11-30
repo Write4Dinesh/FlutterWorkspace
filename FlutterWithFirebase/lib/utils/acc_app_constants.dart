@@ -28,3 +28,9 @@ const String SCREEN_NAME_FACE = "/face";
 const String KeySeparator = "~";
 const String CARD_FIELD_SEPARATOR = "\n";
 const String LIST_OF_KEYS = "list_of_keys";
+
+
+//Global style constants
+
+const double GLOBAL_SCREEN_LEFT_PADDING = 15;
+const double GLOBAL_SCREEN_RIGHT_PADDING = 15;

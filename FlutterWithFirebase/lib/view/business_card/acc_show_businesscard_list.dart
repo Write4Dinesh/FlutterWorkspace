@@ -4,6 +4,7 @@ import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/view/business_card/acc_view_businesscard.dart';
 import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
+import 'package:flutfire/utils/widget_utility.dart';
 
 class AccShowBusinessCardList extends StatefulWidget {
   AccShowBusinessCardList();
@@ -53,13 +54,19 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE),
+          title: Text("Saved Business Card List"),
         ),
-        body: Column(
-          children: <Widget>[
-            buildTextList(_allKeys),
-          ],
-        ));
+        body: Container(
+        color: WidgetUtility.getGlobalScreenBgColor(),child:WidgetUtility.buildPadding(
+            Column(
+              children: <Widget>[
+                buildTextList(_allKeys),
+              ],
+            ),
+            AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+            AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+            10,
+            0)));
   }
 
   Widget buildTextList(List<String> texts) {
@@ -73,15 +80,13 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     }
     return Expanded(
         flex: 1,
-        child: Container(
-          color: Colors.black12,
+
           child: ListView.builder(
-              padding: const EdgeInsets.only(left: 15.0, right: 15.0),
               itemCount: texts.length,
               itemBuilder: (context, i) {
                 return getCardItem(texts[i]);
               }),
-        ));
+        );
   }
 
   goToNextScreen(String text) async {
