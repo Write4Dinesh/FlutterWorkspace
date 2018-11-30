@@ -26,5 +26,5 @@ const String SCREEN_NAME_LABEL = "/label";
 const String SCREEN_NAME_FACE = "/face";
 
 const String KeySeparator = "~";
-const String CARD_FIELD_SEPARATOR = "|";
+const String CARD_FIELD_SEPARATOR = "\n";
 const String LIST_OF_KEYS = "list_of_keys";

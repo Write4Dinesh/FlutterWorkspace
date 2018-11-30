@@ -12,20 +12,14 @@ class AccViewBusinessCard extends StatefulWidget {
 
   @override
   State createState() {
-    return AccViewBusinessCardState(getList());
-  }
-
-  List<String> getList() {
-    List<String> list = _bCard.split(AppConstants.CARD_FIELD_SEPARATOR);
-    return list;
+    return AccViewBusinessCardState();
   }
 }
 
 class AccViewBusinessCardState extends State<AccViewBusinessCard> {
-  List<String> bCardList;
   bool _showProgressBar = false;
 
-  AccViewBusinessCardState(this.bCardList);
+  AccViewBusinessCardState();
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +36,9 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   }
 
   void goToNextScreen(BuildContext context) {
-    StringBuffer buffer = StringBuffer();
-    for (String s in bCardList) {
-      buffer.writeln(s);
-    }
     MaterialPageRoute route = MaterialPageRoute(
         builder: (context) => EditBusinessCard(
-            null,
-            EditBusinessCard.MODE_EDIT,
-            buffer.toString(),
-            widget._key));
+            null, EditBusinessCard.MODE_EDIT, widget._bCard, widget._key));
     Navigator.of(context).push(route);
   }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:mlkit/mlkit.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
-import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/view/business_card/acc_view_businesscard.dart';
 import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 
@@ -68,7 +67,7 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
       return Expanded(
           flex: 1,
           child: Center(
-            child: Text('No text detected',
+            child: Text('The List is empty.',
                 style: Theme.of(context).textTheme.subhead),
           ));
     }
@@ -90,12 +89,7 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     detailsScreenLaunched = true;
     MaterialPageRoute<bool> route = MaterialPageRoute(
         builder: (context) => AccViewBusinessCard(bcard, text));
-    Future<bool> onNextScreenPoppedOff = Navigator.of(context).push(route);
-    /*onNextScreenPoppedOff.then((returnedFromDetailScreen) {
-      if (returnedFromDetailScreen) {
-        WidgetUtility.showFlutterToast("Navigated back");
-      }
-    });*/
+    Navigator.of(context).push(route);
   }
 
   getStringArray() {

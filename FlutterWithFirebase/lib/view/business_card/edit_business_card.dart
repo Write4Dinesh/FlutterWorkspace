@@ -7,8 +7,8 @@ import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 
 class EditBusinessCard extends StatefulWidget {
-  static final int MODE_EDIT = 1;
-  static final int MODE_SCAN_NEW = 2;
+  static const int MODE_EDIT = 1;
+  static const int MODE_SCAN_NEW = 2;
   final File _file;
   int _mode;
   String _bcString;
@@ -24,6 +24,7 @@ class EditBusinessCard extends StatefulWidget {
 
 class _AccScanDetailState extends State<EditBusinessCard> {
   static const String LABEL_SAVE = "Save";
+  static const String LABEL_UPDATE = "Update";
   final saveTFieldController = TextEditingController();
   final bcTFieldController = TextEditingController();
 
@@ -76,33 +77,54 @@ class _AccScanDetailState extends State<EditBusinessCard> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppConstants.BUSINESS_CARD_SCANNER_SCREEN_TITLE),
+          title: new Text((widget._mode == EditBusinessCard.MODE_EDIT
+              ? LABEL_UPDATE
+              : LABEL_SAVE) + " Business Card"),
         ),
-        body: WidgetUtility.getStackWithProgressbar(getBody(), _showProgress));
+        body: WidgetUtility.getStackWithProgressbar(
+            buildPadding(buildBodyContainer(), 15, 15, 5, 5), _showProgress));
   }
 
-  Widget getBody() {
+  Widget buildBodyContainer() {
     saveTFieldController.text = _bcTitle;
     return Column(
       children: <Widget>[
+        buildPadding(buildSaveTextField(), 0, 0, 15, 15),
         buildBody(),
-        TextField(
-          controller: saveTFieldController,
-          decoration: InputDecoration(
-            labelText: "save",
-            hintText: 'Please enter a name to save the business card',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-          ),
-        ),
-        RaisedButton(
-            onPressed: () => onSaveTapped(),
-            color: Colors.green,
-            textColor: Colors.white,
-            shape: WidgetUtility.getShape(5.0),
-            child: new Text(LABEL_SAVE))
+        buildSaveButton()
       ],
+    );
+  }
+
+  Widget buildPadding(Widget childWidget, double left, double right, double top,
+      double bottom) {
+    return Padding(
+        padding:
+            EdgeInsets.only(left: left, right: right, top: top, bottom: bottom),
+        child: childWidget);
+  }
+
+  Widget buildSaveButton() {
+    return RaisedButton(
+        onPressed: () => onSaveTapped(),
+        color: Colors.green,
+        textColor: Colors.white,
+        shape: WidgetUtility.getShape(5.0),
+        child: new Text(widget._mode == EditBusinessCard.MODE_EDIT
+            ? LABEL_UPDATE
+            : LABEL_SAVE));
+  }
+
+  Widget buildSaveTextField() {
+    return TextField(
+      controller: saveTFieldController,
+      decoration: InputDecoration(
+        labelText: "Save as",
+        hintText: 'Please enter a name to save the business card',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+      ),
     );
   }
 
@@ -111,12 +133,14 @@ class _AccScanDetailState extends State<EditBusinessCard> {
       WidgetUtility.showFlutterToast("Nothing to save!");
       return;
     }
-    if (saveTFieldController.text == null || saveTFieldController.text.isEmpty) {
+    if (saveTFieldController.text == null ||
+        saveTFieldController.text.isEmpty) {
       WidgetUtility.showFlutterToast(
           "Enter valid name to save this Business card!!");
       return;
     }
-    _multilineBc = bcTFieldController.text; // copy updated text in the text field
+    _multilineBc =
+        bcTFieldController.text; // copy updated text in the text field
     _bcTitle = saveTFieldController.text; // copy updated text in the text field
     setState(() {
       _showProgress = true;
