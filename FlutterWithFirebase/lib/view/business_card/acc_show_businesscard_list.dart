@@ -89,11 +89,11 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     );
   }
 
-  goToNextScreen(String text) async {
-    String bcard = await AccBusinessCardDataHelper.loadBusinessCardByKey(text);
+  goToNextScreen(String key) async {
+    String bcard = await AccBusinessCardDataHelper.loadBusinessCardByKey(key);
     detailsScreenLaunched = true;
     MaterialPageRoute<bool> route = MaterialPageRoute(
-        builder: (context) => AccViewBusinessCard(bcard, text));
+        builder: (context) => AccViewBusinessCard(key));
     Future<bool> onBackToThisScreen = Navigator.of(context).push(route);
     onBackToThisScreen.then((onValue) {
       refreshThiScreen();

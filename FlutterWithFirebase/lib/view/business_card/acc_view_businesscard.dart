@@ -3,12 +3,12 @@ import 'package:flutfire/utils/widget_utility.dart';
 import 'package:flutfire/utils/acc_app_constants.dart' as AppConstants;
 import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 import 'package:flutfire/view/business_card/edit_business_card.dart';
+import 'dart:async';
 
 class AccViewBusinessCard extends StatefulWidget {
-  String _bCard;
   final String _key;
 
-  AccViewBusinessCard(this._bCard, this._key);
+  AccViewBusinessCard(this._key);
 
   @override
   State createState() {
@@ -18,11 +18,13 @@ class AccViewBusinessCard extends StatefulWidget {
 
 class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   bool _showProgressBar = false;
+  String _bCard;
 
   AccViewBusinessCardState();
 
   @override
   Widget build(BuildContext context) {
+    _bCard = _bCard.trim();
     return Scaffold(
       appBar: AppBar(title: Text(widget._key)),
       body: WidgetUtility.getStackWithProgressbar(
@@ -41,6 +43,7 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
   @override
   void initState() {
     super.initState();
+    fetchData();
   }
 
   Widget getListItem(String text) {
@@ -49,18 +52,18 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
 
   void goToNextScreen(BuildContext context) {
     MaterialPageRoute<bool> route = MaterialPageRoute(
-        builder: (context) => EditBusinessCard(
-            null, EditBusinessCard.MODE_EDIT, widget._bCard, widget._key));
+        builder: (context) =>
+            EditBusinessCard(
+                null, EditBusinessCard.MODE_EDIT, _bCard, widget._key));
     Future<bool> onBackToThisScreen = Navigator.of(context).push(route);
     onBackToThisScreen.then((onValue) {
-      refreshScreen();
+      fetchData();
     });
   }
 
-  void refreshScreen() async {
-    //fetch data
-    widget._bCard =
-        await AccBusinessCardDataHelper.loadBusinessCardByKey(widget._key);
+  void fetchData() async {
+    _bCard =
+    await AccBusinessCardDataHelper.loadBusinessCardByKey(widget._key);
     setState(() {});
   }
 
@@ -89,7 +92,7 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
               widget._key,
               style: WidgetUtility.getTitleStyle(context),
             ),
-            subtitle: Text(widget._bCard,
+            subtitle: Text(_bCard,
                 style: WidgetUtility.getSubTitleStyle(context)),
           ),
           ButtonTheme.bar(
@@ -109,7 +112,7 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
       _showProgressBar = true;
     });
     removed =
-        await AccBusinessCardDataHelper.removeBusinessCardByKey(widget._key);
+    await AccBusinessCardDataHelper.removeBusinessCardByKey(widget._key);
     setState(() {
       _showProgressBar = false;
     });
