@@ -83,12 +83,14 @@ class _AccScanDetailState extends State<EditBusinessCard> {
               " Business Card"),
         ),
         body: WidgetUtility.getStackWithProgressbar(
-            Container(color:WidgetUtility.getGlobalScreenBgColor(),child:WidgetUtility.buildPadding(
-                buildBodyContainer(),
-                AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
-                AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
-                5,
-                5)),
+            Container(
+                color: WidgetUtility.getGlobalScreenBgColor(),
+                child: WidgetUtility.buildPadding(
+                    buildBodyContainer(),
+                    AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
+                    AppConstants.GLOBAL_SCREEN_RIGHT_PADDING,
+                    5,
+                    5)),
             _showProgress));
   }
 
@@ -152,7 +154,7 @@ class _AccScanDetailState extends State<EditBusinessCard> {
     String statusMessage =
         saveSuccessful ? "Save successful" : "Save failed. Try later!!";
     WidgetUtility.showFlutterToast(statusMessage);
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true); //return the value true to the caller..
   }
 
   Widget buildBody() {

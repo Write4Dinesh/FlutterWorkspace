@@ -22,18 +22,26 @@ class AccBusinessCardDataHelper {
       }
 
       //save business card
-     bool bcSaveSuccessful =  await AccDataStore.instance.saveStringByKey(cardKey, bCard);
+      bool bcSaveSuccessful =
+          await AccDataStore.instance.saveStringByKey(cardKey, bCard);
 
       //Save the cardKey separately
-      if(bcSaveSuccessful) {
+      if (bcSaveSuccessful) {
+        //fetch key list from store
         String keyList = await AccDataStore.instance
             .loadStringByKey(AppConstants.LIST_OF_KEYS);
-        keyList = keyList == null || keyList.isEmpty
-            ? cardKey
-            : keyList + AppConstants.KeySeparator + cardKey;
-       bool keyListUpdated =  await AccDataStore.instance
+
+        //append the new 'cardKey' to the end of the list.
+        if (keyList == null || keyList.isEmpty) {
+          keyList = cardKey;
+        } else if (!keyList.contains(cardKey)) {
+          keyList = keyList + AppConstants.KeySeparator + cardKey;
+        }
+
+        //store updated key list
+        bool keyListUpdated = await AccDataStore.instance
             .saveStringByKey(AppConstants.LIST_OF_KEYS, keyList);
-       return keyListUpdated;
+        return keyListUpdated;
       }
     }
     return false;
@@ -43,6 +51,12 @@ class AccBusinessCardDataHelper {
     String keyList =
         await AccDataStore.instance.loadStringByKey(AppConstants.LIST_OF_KEYS);
     List<String> keys = keyList.split(AppConstants.KeySeparator);
+    if(keyList!=null && keyList.isNotEmpty){
+      keyList.trim();
+    }
+    if(keys!=null && keys.contains("")){
+      keys.remove("");
+    }
     return keys;
   }
 
@@ -65,11 +79,12 @@ class AccBusinessCardDataHelper {
       // Remove the business card first
       bool successful = await AccDataStore.instance.removeStringByKey(key);
       if (successful) {
-        keys.remove(key);
+        while (keys.contains(key))
+          keys.remove(key); //remove all occurrences of this key
         // Remove the keys next
-       bool removed = await AccDataStore.instance.saveStringByKey(
+        bool removed = await AccDataStore.instance.saveStringByKey(
             AppConstants.LIST_OF_KEYS, getKeysStringFromList(keys));
-       return removed;
+        return removed;
       }
     }
     return false;

@@ -5,7 +5,7 @@ import 'package:flutfire/data/business_card/acc_businesscard_data_helper.dart';
 import 'package:flutfire/view/business_card/edit_business_card.dart';
 
 class AccViewBusinessCard extends StatefulWidget {
-  final String _bCard;
+  String _bCard;
   final String _key;
 
   AccViewBusinessCard(this._bCard, this._key);
@@ -38,27 +38,42 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Widget getListItem(String text) {
     return ListTile(title: Text(text));
   }
 
   void goToNextScreen(BuildContext context) {
-    MaterialPageRoute route = MaterialPageRoute(
+    MaterialPageRoute<bool> route = MaterialPageRoute(
         builder: (context) => EditBusinessCard(
             null, EditBusinessCard.MODE_EDIT, widget._bCard, widget._key));
-    Navigator.of(context).push(route);
+    Future<bool> onBackToThisScreen = Navigator.of(context).push(route);
+    onBackToThisScreen.then((onValue) {
+      refreshScreen();
+    });
+  }
+
+  void refreshScreen() async {
+    //fetch data
+    widget._bCard =
+        await AccBusinessCardDataHelper.loadBusinessCardByKey(widget._key);
+    setState(() {});
   }
 
   Widget getCard(BuildContext context) {
     List<Widget> buttonBar = <Widget>[];
     buttonBar.add(FlatButton(
-      child:  Text('EDIT',style: WidgetUtility.getButtonLabelStyle(context)),
+      child: Text('EDIT', style: WidgetUtility.getButtonLabelStyle(context)),
       onPressed: () {
         goToNextScreen(context);
       },
     ));
     buttonBar.add(FlatButton(
-      child:  Text('DELETE',style: WidgetUtility.getButtonLabelStyle(context)),
+      child: Text('DELETE', style: WidgetUtility.getButtonLabelStyle(context)),
       onPressed: () {
         remove();
       },
@@ -74,7 +89,8 @@ class AccViewBusinessCardState extends State<AccViewBusinessCard> {
               widget._key,
               style: WidgetUtility.getTitleStyle(context),
             ),
-            subtitle: Text(widget._bCard, style: WidgetUtility.getSubTitleStyle(context)),
+            subtitle: Text(widget._bCard,
+                style: WidgetUtility.getSubTitleStyle(context)),
           ),
           ButtonTheme.bar(
             // make buttons use the appropriate styles for cards

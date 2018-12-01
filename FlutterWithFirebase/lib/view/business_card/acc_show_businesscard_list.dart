@@ -61,7 +61,7 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
             child: WidgetUtility.buildPadding(
                 Column(
                   children: <Widget>[
-                    buildTextList(_allKeys),
+                    buildTextList(),
                   ],
                 ),
                 AppConstants.GLOBAL_SCREEN_LEFT_PADDING,
@@ -70,8 +70,8 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
                 0)));
   }
 
-  Widget buildTextList(List<String> texts) {
-    if (texts.length == 0) {
+  Widget buildTextList() {
+    if (_allKeys.length == 0) {
       return Expanded(
           flex: 1,
           child: Center(
@@ -82,9 +82,9 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     return Expanded(
       flex: 1,
       child: ListView.builder(
-          itemCount: texts.length,
+          itemCount: _allKeys.length,
           itemBuilder: (context, i) {
-            return getCardItem(texts[i]);
+            return getCardItem(_allKeys[i]);
           }),
     );
   }
@@ -94,7 +94,16 @@ class ShowBusinessCardListState extends State<AccShowBusinessCardList>
     detailsScreenLaunched = true;
     MaterialPageRoute<bool> route = MaterialPageRoute(
         builder: (context) => AccViewBusinessCard(bcard, text));
-    Navigator.of(context).push(route);
+    Future<bool> onBackToThisScreen = Navigator.of(context).push(route);
+    onBackToThisScreen.then((onValue) {
+      refreshThiScreen();
+    });
+  }
+
+  void refreshThiScreen() {
+    setState(() {
+      fetchData();
+    });
   }
 
   getStringArray() {
